@@ -1,0 +1,66 @@
+package com.freedommuskrats.brarrays.data;
+
+import com.freedommuskrats.brarrays.exception.DataException;
+
+import static com.freedommuskrats.brarrays.util.GeneralUtil.roundPrint;
+import static com.freedommuskrats.brarrays.util.GeneralUtil.newLine;
+
+public class DataDouble<num>d implements DfData {
+    private <arrayType> data;
+    private int dims;
+
+    public DataDouble<num>d(<arrayType> data) {
+        this.data = data;
+        this.dims = <num>;
+    }
+
+    public <arrayType> getData() {
+        return data;
+    }
+
+    public Class<?> getType() {
+        return Double.class;
+    }
+
+    public int getDims() {
+        return dims;
+    }
+
+    <getMethod>
+
+    public void set(int[] index, Object value) {
+        <access>  = (double) value;
+    }
+
+    public void append(DataDouble<num>d toAppend, int dim) {
+        if (dim < 0 || dim > dims) {
+            throw new DataException(
+                    String.format("Can't append on dim %s for df array of size %s. " +
+                            "'int dim' must be greater than zero and less than the dimension of the array", dim, dims)
+            );
+        }
+
+        <arrayType> ap = toAppend.getData();
+
+        <appendMethod>
+
+    }
+
+    public void append(DataDouble<numLess>d toAppend) {
+
+        <arrayTypeLess> ap = toAppend.getData();
+
+        <appendLessMethod>
+
+    }
+
+    <verifyDimMethod>
+
+    @Override
+    public String toString() {
+        <toString>
+    }
+
+
+
+}
