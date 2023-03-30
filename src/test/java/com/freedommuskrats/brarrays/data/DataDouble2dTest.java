@@ -137,27 +137,27 @@ public class DataDouble2dTest {
 
     @Test
     void matmul_speed_test() {
-        int size = 256;
 
-        double[][] start = toPrimitive(genArray2d(Double.class, 1.0, new int[]{size, size}), 0.0);
-        double[][] d2 = toPrimitive(genArray2d(Double.class, 2.0, new int[]{size, size}), 0.0);
 
         long time;
         DataDouble2d res;
 
-        for (int i = 0; i < 100; i++) {
-            System.out.print("Normal op: ");
-            time = System.currentTimeMillis();
-            res = matmul(new DataDouble2d(start), new DataDouble2d(d2));
-            System.out.println(System.currentTimeMillis() - time);
+        for (int s = 128; s <= 1024; s *= 2) {
+            for (int i = 2; i <= 1024 && i <= s; i *= 2) {
+                double[][] start = toPrimitive(genArray2d(Double.class, 1.0, new int[]{s, s}), 0.0);
+                double[][] d2 = toPrimitive(genArray2d(Double.class, 2.0, new int[]{s, s}), 0.0);
 
-            System.out.print("Cache op: ");
-            time = System.currentTimeMillis();
-            res = matmulWithCacheop(new DataDouble2d(start), new DataDouble2d(d2));
-            System.out.println(System.currentTimeMillis() - time);
+                System.out.println("Cache op : ");
+                System.out.println("-size: " + s);
+                System.out.println("-tile: " + i);
+                time = System.currentTimeMillis();
+                res = matmulWithCacheop(new DataDouble2d(start), new DataDouble2d(d2), i);
+                System.out.println("-" + (System.currentTimeMillis() - time) + " ms");
 
-            System.out.println();
+                System.out.println();
+            }
         }
+
 
 
 

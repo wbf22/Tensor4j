@@ -8,7 +8,7 @@ import static com.freedommuskrats.brarrays.util.GeneralUtil.roundPrint;
 
 public class DataDouble2d implements DfData {
 
-    private static final int MUL_TILE_SIZE = 2;
+    private static final int MUL_TILE_SIZE = 32; // 32 - 128 were optimal testing on MacBook pro 2021. 32 seemed faster for smaller arrays
 
 
     private double[][] data;
@@ -120,7 +120,9 @@ public class DataDouble2d implements DfData {
         return new int[]{data.length, data[0].length};
     }
 
-    public static DataDouble2d matmulWithCacheop(DataDouble2d toMul, DataDouble2d mul) {
+
+
+    public static DataDouble2d matmulWithCacheop(DataDouble2d toMul, DataDouble2d mul, int tileSize) {
         checkDims(toMul, mul);
 
 //        1,1,1,2  X  2,3,1,1     7, 8, 7, 5
@@ -136,13 +138,13 @@ public class DataDouble2d implements DfData {
         double[][] mulArr = mul.getData();
         double[][] result = new double[mul.shape()[0]][toMul.shape()[1]];
 
-        for (int tx = 0; tx < result.length; tx += MUL_TILE_SIZE) {
-            for (int ty = 0; ty < result[0].length; ty += MUL_TILE_SIZE) {
-                for (int tx2 = 0; tx2 < result.length; tx2 += MUL_TILE_SIZE) {
-                    for (int y = 0; y < MUL_TILE_SIZE; y++) {
-                        for (int x = 0; x < MUL_TILE_SIZE; x++) {
+        for (int tx = 0; tx < result.length; tx += tileSize) {
+            for (int ty = 0; ty < result[0].length; ty += tileSize) {
+                for (int tx2 = 0; tx2 < result.length; tx2 += tileSize) {
+                    for (int y = 0; y < tileSize; y++) {
+                        for (int x = 0; x < tileSize; x++) {
                             double sum = 0;
-                            for (int j = 0; j < MUL_TILE_SIZE; j++) {
+                            for (int j = 0; j < tileSize; j++) {
                                 sum += toMulArr[tx + j][ty + y] * mulArr[tx2 + x][tx + j];
                             }
                             result[x + tx2][ty + y] += sum;
