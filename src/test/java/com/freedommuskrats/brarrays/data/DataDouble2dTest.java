@@ -89,6 +89,33 @@ public class DataDouble2dTest {
     }
 
     @Test
+    void matmul_test_diff_dims_variation() {
+        double[][] start = toPrimitive(genArray2d(Double.class, 1.0, new int[]{3, 1}), 0.0);
+        double[][] d2 = toPrimitive(genArray2d(Double.class, 2.0, new int[]{3, 3}), 0.0);
+
+//        1,3,3    X    3,2,1       9, 10, 13
+//                      1,1,2  =
+//                      1,2,2
+
+        start[0][0] = 1;
+        start[1][0] = 3;
+        start[2][0] = 3;
+
+        d2[0][0] = 3;
+        d2[1][0] = 2;
+        d2[2][0] = 1;
+        d2[0][1] = 1;
+        d2[1][1] = 1;
+        d2[2][1] = 2;
+        d2[0][2] = 1;
+        d2[1][2] = 2;
+        d2[2][2] = 2;
+
+        DataDouble2d res = matmul(new DataDouble2d(start), new DataDouble2d(d2));
+        System.out.println(res);
+    }
+
+    @Test
     void matmul_test() {
         double[][] start = toPrimitive(genArray2d(Double.class, 1.0, new int[]{4, 4}), 0.0);
         double[][] d2 = toPrimitive(genArray2d(Double.class, 2.0, new int[]{4, 4}), 0.0);
@@ -151,7 +178,7 @@ public class DataDouble2dTest {
                 System.out.println("-size: " + s);
                 System.out.println("-tile: " + i);
                 time = System.currentTimeMillis();
-                res = matmulWithCacheop(new DataDouble2d(start), new DataDouble2d(d2), i);
+                res = matmul(new DataDouble2d(start), new DataDouble2d(d2), i);
                 System.out.println("-" + (System.currentTimeMillis() - time) + " ms");
 
                 System.out.println();

@@ -75,6 +75,26 @@ public class DataDouble1d implements DfData {
         data = newData;
     }
 
+    public static int[] shape(double[] arr) {
+        return new int[]{arr.length};
+    }
+
+    public static DataDouble1d matmul(DataDouble1d toMul, DataDouble1d mul) {
+        checkDims(toMul.getData(), mul.getData());
+        return new DataDouble1d(new double[]{toMul.getData()[0] * mul.getData()[0]});
+    }
+
+    public static void checkDims(double[] toMul, double[] mul) {
+        int[] mulShape = shape(mul);
+        int[] thisShape = shape(toMul);
+
+        if (thisShape[0] != 1 || mulShape[0] != 1) {
+            throw new DataException("Matmul of 1d matrices must have length of 1 each but were "
+                    + thisShape[0] + " and " + mulShape[0]);
+        }
+    }
+
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
