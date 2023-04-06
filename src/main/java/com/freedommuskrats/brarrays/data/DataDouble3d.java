@@ -6,7 +6,7 @@ import com.freedommuskrats.brarrays.exception.DataException;
 import static com.freedommuskrats.brarrays.util.DimUtil.verifyDimensions;
 import static com.freedommuskrats.brarrays.util.GeneralUtil.roundPrint;
 
-public class DataDouble3d implements DfData {
+public class DataDouble3d extends DfData {
     private double[][][] data;
     private int dims;
 

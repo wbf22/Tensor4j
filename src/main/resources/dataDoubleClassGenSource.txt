@@ -5,7 +5,7 @@ import com.freedommuskrats.brarrays.exception.DataException;
 import static com.freedommuskrats.brarrays.util.GeneralUtil.roundPrint;
 import static com.freedommuskrats.brarrays.util.GeneralUtil.newLine;
 
-public class DataDouble<num>d implements DfData {
+public class DataDouble<num>d extends DfData {
     private <arrayType> data;
     private int dims;
 

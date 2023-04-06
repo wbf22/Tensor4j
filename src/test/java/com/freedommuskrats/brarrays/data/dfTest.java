@@ -17,12 +17,10 @@ class dfTest {
     void testStuff() {
         double[][][] a1 = toPrimitive(genArray3d(Double.class, new Random(System.nanoTime()), new int[]{4, 3, 2}), 0.0);
         double[][][] a2 = toPrimitive(genArray3d(Double.class, new Random(System.nanoTime()), new int[]{4, 2, 1}), 0.0);
+        Object obj = a1;
+        double[][][] recovered = (double[][][]) obj;
 
-        DataDouble3d arr1 = new DataDouble3d(a1);
-        DataDouble3d arr2 = new DataDouble3d(a2);
-
-        System.out.println(arr1);
-        System.out.println(arr2);
+        System.out.println(recovered);
         System.out.println();
     }
 

@@ -7,7 +7,7 @@ import java.util.Arrays;
 import static com.freedommuskrats.brarrays.util.GeneralUtil.roundPrint;
 import static com.freedommuskrats.brarrays.util.GeneralUtil.newLine;
 
-public class DataDouble4d implements DfData {
+public class DataDouble4d extends DfData {
     private double[][][][] data;
     private int dims;
 

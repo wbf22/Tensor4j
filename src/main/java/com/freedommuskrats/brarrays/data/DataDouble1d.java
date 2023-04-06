@@ -6,7 +6,7 @@ import com.freedommuskrats.brarrays.exception.DataException;
 import static com.freedommuskrats.brarrays.util.DimUtil.verifyDimensions;
 import static com.freedommuskrats.brarrays.util.GeneralUtil.roundPrint;
 
-public class DataDouble1d implements DfData {
+public class DataDouble1d extends DfData {
     private double[] data;
     private int dims;
 
@@ -77,6 +77,27 @@ public class DataDouble1d implements DfData {
 
     public static int[] shape(double[] arr) {
         return new int[]{arr.length};
+    }
+
+    public static DataDouble1d dot(DataDouble1d toMul, DataDouble1d mul) {
+        double[] toMulD = toMul.getData();
+        double[] mulD = mul.getData();
+
+        int[] mulShape = shape(toMulD);
+        int[] thisShape = shape(mulD);
+
+        if (thisShape[0] != mulShape[0]) {
+            throw new DataException("Dot of 1d matrices must have equal length but were "
+                    + thisShape[0] + " and " + mulShape[0]);
+        }
+
+        double[] data = new double[1];
+        double sum = 0;
+        for (int i = 0; i < toMulD.length; i++) {
+            sum += toMulD[i] * mulD[i];
+        }
+        data[0] = sum;
+        return new DataDouble1d(data);
     }
 
     public static DataDouble1d matmul(DataDouble1d toMul, DataDouble1d mul) {

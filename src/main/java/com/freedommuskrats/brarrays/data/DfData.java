@@ -1,5 +1,8 @@
 package com.freedommuskrats.brarrays.data;
 
-public interface DfData {
+public abstract class DfData {
+
+
+
 
 }

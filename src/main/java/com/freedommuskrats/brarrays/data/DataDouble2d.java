@@ -6,7 +6,7 @@ import com.freedommuskrats.brarrays.exception.DataException;
 import static com.freedommuskrats.brarrays.util.DimUtil.verifyDimensions;
 import static com.freedommuskrats.brarrays.util.GeneralUtil.roundPrint;
 
-public class DataDouble2d implements DfData {
+public class DataDouble2d extends DfData {
 
     private static final int MUL_TILE_SIZE = 2; // 32 seemed to be the best. 16 - 128 were optimal testing on MacBook pro 2021.
 
@@ -39,7 +39,6 @@ public class DataDouble2d implements DfData {
     public DataDouble1d get(int i) {
         return new DataDouble1d(data[i]);
     }
-
 
     public void set(int[] index, Object value) {
         data[index[0]][index[1]] = (double) value;
@@ -181,34 +180,24 @@ public class DataDouble2d implements DfData {
         return result;
     }
 
-//    public static DataDouble2d matmul(DataDouble2d toMul, DataDouble2d mul) {
-//        checkDims(toMul, mul);
-//
-////        1,1,1,2  X  2,3,1,1     7, 8, 7, 5
-////        2,1,2,1     1,1,1,1     10,12,7, 6
-////        3,1,1,1     2,2,1,1  =  10,13,7, 6
-////        1,2,1,1     1,1,2,1     7, 8, 6, 5
-//
-////        1,2,1  X    3,2       6,  5
-////        3,2,1       1,1  =    12, 9
-////                    1,1
-//
-//        double[][] toMulArr = toMul.getData();
-//        double[][] mulArr = mul.getData();
-//        double[][] result = new double[mul.shape()[0]][toMul.shape()[1]];
-//
-//        for (int row = 0; row < toMulArr[0].length; row++) {
-//            for (int col = 0; col < mulArr.length; col++) {
-//                double sum = 0;
-//                for (int j = 0; j < toMulArr.length; j++) {
-//                    sum += toMulArr[j][row] * mulArr[col][j];
-//                }
-//                result[col][row] += sum;
-//            }
-//        }
-//        return new DataDouble2d(result);
-//    }
+    public static DataDouble2d matmulNoCache(DataDouble2d toMul, DataDouble2d mul) {
+        checkDims(toMul.getData(), mul.getData());
 
+        double[][] toMulArr = toMul.getData();
+        double[][] mulArr = mul.getData();
+        double[][] result = new double[mul.shape()[0]][toMul.shape()[1]];
+
+        for (int row = 0; row < toMulArr[0].length; row++) {
+            for (int col = 0; col < mulArr.length; col++) {
+                double sum = 0;
+                for (int j = 0; j < toMulArr.length; j++) {
+                    sum += toMulArr[j][row] * mulArr[col][j];
+                }
+                result[col][row] += sum;
+            }
+        }
+        return new DataDouble2d(result);
+    }
 
     public static void checkDims(double[][] toMul, double[][] mul) {
         int[] mulShape = shape(mul);
