@@ -71,48 +71,53 @@ public class DataDouble2dTest {
 //                    1,1
 
         start[0][0] = 1;
-        start[1][0] = 2;
-        start[2][0] = 1;
-        start[0][1] = 3;
+        start[0][1] = 2;
+        start[0][2] = 1;
+        start[1][0] = 3;
         start[1][1] = 2;
-        start[2][1] = 1;
+        start[1][2] = 1;
 
         d2[0][0] = 3;
-        d2[1][0] = 2;
-        d2[0][1] = 1;
+        d2[0][1] = 2;
+        d2[1][0] = 1;
         d2[1][1] = 1;
-        d2[0][2] = 1;
-        d2[1][2] = 1;
+        d2[2][0] = 1;
+        d2[2][1] = 1;
 
         DataDouble2d res = matmul(new DataDouble2d(start), new DataDouble2d(d2));
         System.out.println(res);
+
+        assertEquals(res.get(new int[]{0, 0}), 6.0);
+        assertEquals(res.get(new int[]{1, 0}), 5.0);
+        assertEquals(res.get(new int[]{0, 1}), 12.0);
+        assertEquals(res.get(new int[]{1, 1}), 9.0);
     }
 
     @Test
     void matmul_test_diff_dims_variation() {
         double[][] start = toPrimitive(genArray2d(Double.class, 1.0, new int[]{3, 1}), 0.0);
-        double[][] d2 = toPrimitive(genArray2d(Double.class, 2.0, new int[]{3, 3}), 0.0);
+        double[][] d2 = toPrimitive(genArray2d(Double.class, 2.0, new int[]{2, 3}), 0.0);
 
-//        1,3,3    X    3,2,1       9, 10, 13
-//                      1,1,2  =
-//                      1,2,2
+//        1,3,3    X    3,2       9, 11,
+//                      1,1  =
+//                      1,2
 
         start[0][0] = 1;
-        start[1][0] = 3;
-        start[2][0] = 3;
+        start[0][1] = 3;
+        start[0][2] = 3;
 
         d2[0][0] = 3;
-        d2[1][0] = 2;
-        d2[2][0] = 1;
-        d2[0][1] = 1;
+        d2[0][1] = 2;
+        d2[1][0] = 1;
         d2[1][1] = 1;
+        d2[2][0] = 1;
         d2[2][1] = 2;
-        d2[0][2] = 1;
-        d2[1][2] = 2;
-        d2[2][2] = 2;
 
         DataDouble2d res = matmul(new DataDouble2d(start), new DataDouble2d(d2));
         System.out.println(res);
+
+        assertEquals(res.get(new int[]{0, 0}), 9.0);
+        assertEquals(res.get(new int[]{1, 0}), 11.0);
     }
 
     @Test
@@ -189,5 +194,64 @@ public class DataDouble2dTest {
 
 
 
+    }
+
+    @Test
+    void cachedVsNormal() {
+        int s = 128;
+        double[][] start = toPrimitive(genArray2d(Double.class, 1.0, new int[]{s, s}), 0.0);
+        double[][] d2 = toPrimitive(genArray2d(Double.class, 2.0, new int[]{s, s}), 0.0);
+
+        double iterations = 1000.0;
+
+        long time = System.currentTimeMillis();
+        long total = 0;
+        for (int i = 0; i < iterations; i++) {
+            DataDouble2d res = matmul(new DataDouble2d(start), new DataDouble2d(d2), 32);
+            total += System.currentTimeMillis() - time;
+        }
+        System.out.println("Cache op : ");
+        System.out.println("-size: " + s);
+        System.out.println("-tile: " + 32);
+        System.out.println("-" + total/iterations + " ms");
+        System.out.println();
+
+        time = System.currentTimeMillis();
+        total = 0;
+        for (int i = 0; i < iterations; i++) {
+            DataDouble2d res = matmulNoCache(new DataDouble2d(start), new DataDouble2d(d2));
+            total += System.currentTimeMillis() - time;
+        }
+        System.out.println("No op : ");
+        System.out.println("-size: " + s);
+        System.out.println("-" + total/iterations + " ms");
+        System.out.println();
+    }
+
+    @Test
+    void matmulNoCache_test() {
+        double[][] start = toPrimitive(genArray2d(Double.class, 1.0, new int[]{3, 1}), 0.0);
+        double[][] d2 = toPrimitive(genArray2d(Double.class, 2.0, new int[]{2, 3}), 0.0);
+
+//        1,3,3    X    3,2       9, 11,
+//                      1,1  =
+//                      1,2
+
+        start[0][0] = 1;
+        start[0][1] = 3;
+        start[0][2] = 3;
+
+        d2[0][0] = 3;
+        d2[0][1] = 2;
+        d2[1][0] = 1;
+        d2[1][1] = 1;
+        d2[2][0] = 1;
+        d2[2][1] = 2;
+
+        DataDouble2d res = matmulNoCache(new DataDouble2d(start), new DataDouble2d(d2));
+        System.out.println(res);
+
+        assertEquals(res.get(new int[]{0, 0}), 9.0);
+        assertEquals(res.get(new int[]{1, 0}), 11.0);
     }
 }

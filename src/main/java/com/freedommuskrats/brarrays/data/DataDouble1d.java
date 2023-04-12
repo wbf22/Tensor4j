@@ -33,10 +33,12 @@ public class DataDouble1d extends DfData {
         return data[i];
     }
 
-    
-
     public void set(int[] index, Object value) {
         data[index[0]] = (double) value;
+    }
+
+    public DataDouble1d getH(int xl) {
+        return new DataDouble1d(new double[]{data[xl]});
     }
 
     public df unsqueeze(int dim) {
@@ -45,6 +47,12 @@ public class DataDouble1d extends DfData {
 
     public df squeeze() {
         return new df(null);
+    }
+
+
+    @Override
+    public int[] shape() {
+        return new int[]{data.length};
     }
 
     public void append(DataDouble1d toAppend) {
@@ -129,6 +137,7 @@ public class DataDouble1d extends DfData {
         sb.append("]\n");
         return sb.toString();
     }
+
 
 
 }

@@ -28,6 +28,11 @@ public class DataDouble<num>d extends DfData {
 
     <getMethod>
 
+    @Override
+    public int[] shape() {
+        return new int[]{<shape>};
+    }
+
     public void set(int[] index, Object value) {
         <access>  = (double) value;
     }

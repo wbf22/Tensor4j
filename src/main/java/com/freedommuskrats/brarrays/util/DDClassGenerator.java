@@ -14,6 +14,10 @@ public class DDClassGenerator {
     public final static String INDENT = "    ";
 
     public static void generate(int dimension, String savePath) throws IOException {
+        if (dimension < 3) {
+            throw new IllegalArgumentException("Dimension must be greater than 3. We don't want to overwrite the existing classes.");
+        }
+
         String classString = Files.readString(
                 Path.of("src/main/resources/dataDoubleClassGenSource.txt"),
                 StandardCharsets.UTF_8
@@ -33,6 +37,17 @@ public class DDClassGenerator {
         classString = classString.replaceAll("<arrayTypeLess>", arrayStringLess);
         classString = classString.replaceAll("<num>", Integer.toString(dimension));
         classString = classString.replaceAll("<numLess>", Integer.toString(dimension - 1));
+
+        String shapeString = "";
+        for (int i = 0; i < dimension; i++) {
+            shapeString += "data";
+            for (int j = dimension - 1 - i; j > 0; j--) {
+                shapeString += "[0]";
+            }
+            shapeString += ".length";
+            shapeString += (i != dimension - 1) ? ", " : "";
+        }
+        classString = classString.replaceAll("<shape>", shapeString);
 
         String accessString = "data";
         for (int i = 0; i < dimension; i++) {
@@ -79,7 +94,7 @@ public class DDClassGenerator {
 
             appendMethod += indent(3) + "verifyDimensions(ap, new int[]{";
             for (int i = 0; i < dimension; i++) {
-                appendMethod += (i == dim) ? "ap" : "data";
+                appendMethod += (dimension - 1 - i == dim) ? "ap" : "data";
                 for (int j = 0; j < i; j++) {
                     appendMethod += "[0]";
                 }
@@ -92,9 +107,9 @@ public class DDClassGenerator {
             for (int j = 0; j < pieces.length; j++) {
                 String mod = pieces[j];
                 String rep = "";
-                if (j == dim) {
+                if (dimension - 1 - j == dim) {
                     rep += " + ap";
-                    for (int k = 0; k < dim; k++) {
+                    for (int k = dimension - 1 - dim; k > 0; k--) {
                         rep += "[0]";
                     }
                     rep += ".length";
@@ -108,43 +123,43 @@ public class DDClassGenerator {
 
             String[] iterationPieces = genIterationPieces(dim, dimension);
             for (int i = 0; i < dimension; i++) {
-                appendMethod += indent(3 + i) + forLine(i + 1, iterationPieces[i]);
+                appendMethod += indent(3 + i) + forLine(dimension - i, iterationPieces[i]);
                 appendMethod += newLine(0);
             }
 
             appendMethod += indent(3 + dimension) + "if (x";
             appendMethod += dim + 1;
             appendMethod += " < data";
-            appendMethod += times(dim, "[0]");
+            appendMethod += times(dimension - dim - 1, "[0]");
             appendMethod += ".length) {";
             appendMethod += newLine(0);
 
             appendMethod += indent(4 + dimension) + "newData";
-            for (int i = 0; i < dimension; i++) {
-                appendMethod += "[x" + (i+1) + "]";
+            for (int i = dimension; i > 0; i--) {
+                appendMethod += "[x" + i + "]";
             }
             appendMethod += " = data";
-            for (int i = 0; i < dimension; i++) {
-                appendMethod += "[x" + (i+1) + "]";
+            for (int i = dimension; i > 0; i--) {
+                appendMethod += "[x" + i + "]";
             }
             appendMethod += ";";
             appendMethod += newLine(3 + dimension);
             appendMethod += "} else {";
             appendMethod += newLine(0);
             appendMethod += indent(4 + dimension) + "newData";
-            for (int i = 0; i < dimension; i++) {
-                appendMethod += "[x" + (i+1) + "]";
+            for (int i = dimension; i > 0; i--) {
+                appendMethod += "[x" + i + "]";
             }
             appendMethod += " = ap";
-            for (int i = 0; i < dimension; i++) {
-                if (dim == i) {
-                    appendMethod += "[x" + (i+1) + " - data";
-                    for (int j = 0; j < dim; j++) {
+            for (int i = dimension; i > 0; i--) {
+                if (i - 1 == dim) {
+                    appendMethod += "[x" + i + " - data";
+                    for (int j = dimension - 1 - dim; j > 0; j--) {
                         appendMethod += "[0]";
                     }
                     appendMethod += ".length]";
                 } else {
-                    appendMethod += "[x" + (i+1) + "]";
+                    appendMethod += "[x" + i + "]";
                 }
             }
             appendMethod += ";";
@@ -174,7 +189,7 @@ public class DDClassGenerator {
         appendMethod += indent(2) + "verifyDimensions(ap, new int[]{";
         for (int i = 0; i < dim - 1; i++) {
             appendMethod += "data";
-            for (int j = 0; j < i; j++) {
+            for (int j = 0; j < i + 1; j++) {
                 appendMethod += "[0]";
             }
             appendMethod += (i != dim - 2)? ".length, " : ".length});" + newLine(0);
@@ -185,7 +200,7 @@ public class DDClassGenerator {
         String[] pieces = genLengthPieces(dim);
         for (int j = 0; j < pieces.length; j++) {
             String mod = pieces[j];
-            String rep = (j == pieces.length - 1)? " + 1" : "";
+            String rep = (j == 0)? " + 1" : "";
             mod = mod.replaceAll("<p>", rep);
 
             appendMethod += mod;
@@ -195,44 +210,35 @@ public class DDClassGenerator {
 
         String[] iterationPieces = genIterationPieces(dim -1, dim);
         for (int i = 0; i < dim; i++) {
-            appendMethod += indent(2 + i) + forLine(i + 1, iterationPieces[i]);
+            appendMethod += indent(2 + i) + forLine(dim - i, iterationPieces[i]);
             appendMethod += newLine(0);
         }
 
         appendMethod += indent(2 + dim) + "if (x";
         appendMethod += dim;
         appendMethod += " < data";
-        appendMethod += times(dim - 1, "[0]");
         appendMethod += ".length) {";
         appendMethod += newLine(0);
 
         appendMethod += indent(3 + dim) + "newData";
-        for (int i = 0; i < dim; i++) {
-            appendMethod += "[x" + (i+1) + "]";
+        for (int i = dim; i > 0; i--) {
+            appendMethod += "[x" + i + "]";
         }
         appendMethod += " = data";
-        for (int i = 0; i < dim; i++) {
-            appendMethod += "[x" + (i+1) + "]";
+        for (int i = dim; i > 0; i--) {
+            appendMethod += "[x" + i + "]";
         }
         appendMethod += ";";
         appendMethod += newLine(2 + dim);
         appendMethod += "} else {";
         appendMethod += newLine(0);
         appendMethod += indent(3 + dim) + "newData";
-        for (int i = 0; i < dim; i++) {
-            appendMethod += "[x" + (i+1) + "]";
+        for (int i = dim; i > 0; i--) {
+            appendMethod += "[x" + i + "]";
         }
         appendMethod += " = ap";
-        for (int i = 0; i < dim - 1; i++) {
-            if (dim == i) {
-                appendMethod += "[x" + (i+1) + " - data";
-                for (int j = 0; j < dim; j++) {
-                    appendMethod += "[0]";
-                }
-                appendMethod += ".length]";
-            } else {
-                appendMethod += "[x" + (i+1) + "]";
-            }
+        for (int i = dim; i > 1; i--) {
+            appendMethod += "[x" + i + "]";
         }
         appendMethod += ";";
 
@@ -321,7 +327,7 @@ public class DDClassGenerator {
     public static String[] genIterationPieces(int appendDim, int dimensions) {
         String[] pieces = new String[dimensions];
         for (int i = 0; i < dimensions; i++) {
-            String s = (i == appendDim) ? "newData" : "data";
+            String s = (dimensions - 1 - i == appendDim) ? "newData" : "data";
             for (int j = 0; j < i; j++) {
                 s += "[0]";
             }
@@ -359,7 +365,7 @@ public class DDClassGenerator {
 
         String[] iterationPieces = genIterationPieces(dim, dim);
         for (int i = dim - 1; i >= 0; i--) {
-            method += indent(1 + dim - i) + forLine(i + 1, iterationPieces[i]);
+            method += indent(1 + dim - i) + forLine(i + 1, iterationPieces[dim - 1 - i]);
             method += newLine(0);
             method += indent(2 + dim - i);
             if (i == dim - 1) {
@@ -374,15 +380,17 @@ public class DDClassGenerator {
                 method += newLine(0);
             } else if (i == 0){
                 method += "sb.append(roundPrint(data";
-                for (int j = 0; j < dim; j++) {
-                    method += "[x" + (j+1) + "]";
+                for (int j = dim; j > 0; j--) {
+                    method += "[x" + j + "]";
                 }
                 method += ", 4));";
                 method += newLine(0);
             }
         }
 
-        method += indent(2 + dim) + "if (x1 < data.length - 1) {";
+        method += indent(2 + dim) + "if (x1 < data";
+        method += times(dim - 1, "[0]");
+        method += ".length - 1) {";
         method += newLine(0);
         method += indent(3 + dim) + "sb.append(\", \");";
         method += newLine(2 + dim);
@@ -462,8 +470,8 @@ public class DDClassGenerator {
         method += newLine(0);
 
         method +=  indent(2) + "return data";
-        for (int i = 0; i < acc; i++) {
-            method += "[x" + (i+1) + "]";
+        for (int i = acc; i > 0; i--) {
+            method += "[x" + i + "]";
         }
         method += ";";
         method += newLine(0);
