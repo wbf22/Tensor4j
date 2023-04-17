@@ -74,7 +74,7 @@ public class DataDoulbe4dTest {
     }
 
     @Test
-    void append_2dArray () {
+    void append_3dArray () {
         double[][][][] start = toPrimitive(
                 genArray4d(Double.class, 1.0, new int[]{4, 4, 3, 2}), 0.0
         );

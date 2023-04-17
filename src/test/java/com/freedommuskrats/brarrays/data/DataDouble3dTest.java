@@ -95,9 +95,7 @@ public class DataDouble3dTest {
 
         DataDouble3d d3Start = new DataDouble3d(start);
         DataDouble3d d3Sec = new DataDouble3d(sec);
-        DataDouble3d res = new DataDouble3d(
-                DataDouble3d.matmul(d3Start, d3Sec)
-        );
+        DataDouble3d res = DataDouble3d.matmul(d3Start, d3Sec);
 
         assertEquals(res.get(0, 0, 0), 12.0);
         assertEquals(res.get(1, 0, 0), 15.0);
@@ -118,9 +116,7 @@ public class DataDouble3dTest {
 
         DataDouble3d d3Start = new DataDouble3d(start);
         DataDouble3d d3Sec = new DataDouble3d(sec);
-        DataDouble3d res = new DataDouble3d(
-                DataDouble3d.matmul(d3Start, d3Sec)
-        );
+        DataDouble3d res = DataDouble3d.matmul(d3Start, d3Sec);
 
         assertEquals(res.get(0, 0, 0), 12.0);
         assertEquals(res.get(1, 0, 0), 15.0);

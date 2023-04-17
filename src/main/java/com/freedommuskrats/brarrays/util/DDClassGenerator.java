@@ -23,6 +23,8 @@ public class DDClassGenerator {
                 StandardCharsets.UTF_8
         );
 
+        String className = "DataDouble" + dimension + "d";
+
         String arrayString = "double";
         for (int i = 0; i < dimension; i++) {
             arrayString += "[]";
@@ -32,6 +34,9 @@ public class DDClassGenerator {
         for (int i = 0; i < dimension - 1; i++) {
             arrayStringLess += "[]";
         }
+
+        String constructors = genContructors(dimension, className);
+        classString = classString.replaceAll("<constructors>", constructors);
 
         classString = classString.replaceAll("<arrayType>", arrayString);
         classString = classString.replaceAll("<arrayTypeLess>", arrayStringLess);
@@ -55,12 +60,20 @@ public class DDClassGenerator {
         }
         classString = classString.replaceAll("<access>", accessString);
 
-
         String appendMethod = genAppendMethod(classString, dimension, arrayString);
         classString = classString.replaceAll("<appendMethod>", appendMethod);
 
         String appendLessMethod = genAppendLessMethod(classString, dimension, arrayString, arrayStringLess);
         classString = classString.replaceAll("<appendLessMethod>", appendLessMethod);
+
+        String sliceMethod = genSliceMethod(className, dimension, arrayString);
+        classString = classString.replaceAll("<sliceMethod>", sliceMethod);
+
+        String multiplyMethod = genMultiplyMethod(className, dimension, arrayString, arrayStringLess);
+        classString = classString.replaceAll("<mulitplyMethod>", multiplyMethod);
+
+        String matmulMethod = genMatmulMethod(className, dimension, arrayString, arrayStringLess);
+        classString = classString.replaceAll("<matmulMethod>", matmulMethod);
 
         String verifyDimMethod = genVerifyDimsMethod(dimension);
         verifyDimMethod += genVerifyDimsMethod(dimension - 1);
@@ -70,18 +83,222 @@ public class DDClassGenerator {
         classString = classString.replaceAll("<toString>", toStringMethod);
 
         String getMethods = genGetMethod(dimension, dimension);
-        for (int i = dimension - 1; i > 0; i--) {
-            getMethods += genGetMethod(dimension, i);
-        }
         classString = classString.replaceAll("<getMethod>", getMethods);
 
-
+        String setMethods = genSetMethod(dimension);
+        classString = classString.replaceAll("<setMethod>", setMethods);
 
         Files.writeString(
                 Path.of(savePath),
                 classString,
                 StandardCharsets.UTF_8
         );
+    }
+
+    private static String genContructors(int dimension, String className) {
+        String constructors = newLine(0);
+        constructors += "    /**\n" +
+                "     * Create a new " + className + " object with the given size and filler.\n" +
+                "     * @param dim1 The x size or width of the array.\n" +
+                "     * @param dim2 The y size or height of the array.\n" +
+                "     * @param dim3 The z size or depth of the array.\n";
+        for (int i = 4; i <= dimension; i++) {
+            constructors += indent(1) + " * @param dim" + i + " The dim" + i + " size of the array.\n";
+        }
+        constructors += "     * @param filler The value to fill the array with.";
+        constructors += newLine(0) + "     */" + newLine(0);
+        constructors += indent(1) + "public " + className + "(";
+        for(int i = 1; i <= dimension; i++) {
+            constructors += "int dim" + i;
+            constructors += ", ";
+        }
+        constructors += "double filler) {" + newLine(0);
+        constructors += indent(2) + "dims = " + dimension + ";" + newLine(0);
+        constructors += indent(2) + "this.data = new double";
+        for(int i = dimension; i >= 1; i--) {
+            constructors += "[dim" + i;
+            constructors += "]";
+        }
+        constructors += ";" + newLine(0);
+        for(int i = dimension; i > 1; i--) {
+            constructors += indent(2 + dimension - i) + forLine(i, "dim" + i) + newLine(0);
+        }
+        constructors += indent(2 + dimension) + "Arrays.fill(data";
+        for(int i = dimension; i > 1; i--) {
+            constructors += "[x" + i + "]";
+        }
+        constructors += ", filler);" + newLine(0);
+        for(int i = dimension; i > 1; i--) {
+            constructors += indent(i) + "}" + newLine(0);
+        }
+        constructors += indent(1) + "}" + newLine(0) + newLine(0);
+
+
+        constructors += "    /**\n" +
+                "     * Create a new random " + className + " object with the given size.\n" +
+                "     * @param dim1 The x size or width of the array.\n" +
+                "     * @param dim2 The y size or height of the array.\n" +
+                "     * @param dim3 The z size or depth of the array.\n";
+        for (int i = 4; i <= dimension; i++) {
+            constructors += indent(1) + " * @param dim" + i + " The dim" + i + " size of the array.\n";
+        }
+        constructors += newLine(0) + "     */" + newLine(0);
+        constructors += indent(1) + "public " + className + "(";
+        for(int i = 1; i <= dimension; i++) {
+            constructors += "int dim" + i;
+            if (i != dimension)
+                constructors += ", ";
+        }
+        constructors += ") {" + newLine(0);
+        constructors += indent(2) + "dims = " + dimension + ";" + newLine(0);
+        constructors += indent(2) + "Random r = new Random(System.nanoTime());" + newLine(0);
+        constructors += indent(2) + "this.data = new double";
+        for(int i = dimension; i > 0; i--) {
+            constructors += "[dim" + i;
+            constructors += "]";
+        }
+        constructors += ";" + newLine(0);
+        for(int i = dimension; i > 0; i--) {
+            constructors += indent(2 + dimension - i) + forLine(i, "dim" + i) + newLine(0);
+        }
+        constructors += indent(dimension + 2) + "data";
+        for(int i = dimension; i > 0; i--) {
+            constructors += "[x" + i + "]";
+        }
+        constructors += " = r.nextDouble();" + newLine(0);
+        for(int i = dimension; i > 0; i--) {
+            constructors += indent(i + 1) + "}" + newLine(0);
+        }
+        constructors += indent(1) + "}" + newLine(0);
+
+
+        for (int k = 0; k < 2; k++) {
+            constructors += indent(1) + "public static " + className;
+            constructors += (k==0)? " zeros(" : " ones(";
+            for(int i = 1; i <= dimension; i++) {
+                constructors += "int dim" + i;
+                if (i != dimension)
+                    constructors += ", ";
+            }
+            constructors += ") {" + newLine(0);
+            constructors += indent(2) + "return new " + className + "(";
+            for(int i = 1; i <= dimension; i++) {
+                constructors += "dim" + i;
+                constructors += ", ";
+            }
+            constructors += k + ");" + newLine(0);
+            constructors += indent(1) + "}" + newLine(0);
+        }
+        constructors += newLine(0);
+
+        return constructors;
+    }
+
+
+    public static String genGetMethod(int dim, int acc) {
+        String method = newLine(0);
+        method += indent(1) + "public ";
+        method += (dim == acc) ? "double" : "DataDouble" + (dim - acc) + "d";
+
+        method += " get(";
+        for (int i = dim - acc; i < dim; i++) {
+            method += "int x" + (i+1);
+            method += (i == dim - 1)? ") {" : ", ";
+        }
+        method += newLine(0);
+
+        method += indent(2) + "return ";
+        method += (dim == acc) ? "" : "new DataDouble" + (dim - acc) + "d";
+        method += "(data";
+        for (int i = dim; i > dim - acc; i--) {
+            method += "[x" + i + "]";
+        }
+        method += ");";
+        method += newLine(0);
+
+        method += indent(1) + "}";
+        newLine(0);
+
+        return method;
+    }
+
+    public static String genSetMethod(int dim) {
+        String method = newLine(0);
+
+        String[] valTypes = new String[dim];
+        valTypes[0] = "double";
+        for (int i = 1; i < dim; i++) {
+            valTypes[i] = "DataDouble" + i + "d";
+        }
+
+        int acc = dim;
+        method += indent(1) + "public void set(";
+        for (int i = 0; i < acc; i++) {
+            method += "int x" + (i+1);
+            method += ", ";
+        }
+        method += valTypes[dim-acc] + " val) {";
+        method += newLine(0);
+
+        method +=  indent(2) + "data";
+        for (int i = acc; i > 0; i--) {
+            method += "[x" + i + "]";
+        }
+        method += (acc==dim)? " = val;" : " = val.getData();";
+        method += newLine(0);
+
+        method += indent(1) + "}";
+        method += newLine(0);
+        method += newLine(0);
+        return method;
+    }
+
+    public static String genSliceMethod(String className, int dim, String arrayString) {
+        String method = newLine(0);
+        method += indent(1) + "public " + className + " slice(";
+        for (int i = 0; i < dim; i++) {
+            method += "Range x" + (i+1) + "Range";
+            method += (i == dim - 1)? ") {" + newLine() : ", ";
+        }
+
+        for (int i = 0; i < dim; i++) {
+            method += indent(2) + "int[] x" + (i+1) + "Seq = x" + (i+1) + "Range.getSequence();" + newLine(0);
+        }
+        method += newLine(0);
+
+        for (int i = 0; i < dim; i++) {
+            method += indent(2) + "x" + (i+1) + "Seq = (x" + (i+1) + "Seq == null)";
+            method += "? range(data" + times(dim -1 - i, "[0]") + ".length).getSequence() : " + "x" + (i+1) + "Seq;" + newLine(0);
+        }
+
+        method += newLine(0);
+        method += indent(2) + arrayString + " newData = new double";
+        for (int i = dim; i > 0; i--) {
+            method += "[x" + i + "Seq.length]";
+        }
+        method += ";" + newLine(0);
+        for (int i = dim; i > 0; i--) {
+            method += indent(2 + dim - i) + forLine(i, "x" + (i) + "Seq.length") + newLine();
+        }
+
+        method += indent(2 + dim) + "newData";
+        for (int i = dim; i > 0; i--) {
+            method += "[x" + i + "]";
+        }
+        method += " = data";
+        for (int i = dim; i > 0; i--) {
+            method += "[x" + i + "Seq[x" + i + "]]";
+        }
+        method += ";" + newLine(0);
+
+        for (int i = dim; i > 0; i--) {
+            method += indent(1 + i) + "}" + newLine(0);
+        }
+        method += newLine(0);
+
+        method += indent(2) + "return new " + className + "(newData);" + newLine(0);
+        method += indent(1) + "}" + newLine(0);
+        return method;
     }
 
     public static String genAppendMethod(String classString, int dimension, String arrayString) {
@@ -237,7 +454,8 @@ public class DDClassGenerator {
             appendMethod += "[x" + i + "]";
         }
         appendMethod += " = ap";
-        for (int i = dim; i > 1; i--) {
+        appendMethod += "[x" + dim + " - data.length]";
+        for (int i = dim - 1; i > 1; i--) {
             appendMethod += "[x" + i + "]";
         }
         appendMethod += ";";
@@ -256,6 +474,86 @@ public class DDClassGenerator {
 
         return appendMethod;
     }
+
+    public static String genMultiplyMethod(String classString, int dim, String arrayString, String arrayLessString) {
+
+        String multiplyMethod = newLine(0);
+        multiplyMethod += indent(1) + "public static " + classString + " multiply("
+                + classString + " array, double scalar) {" + newLine(0);
+        multiplyMethod += indent(2) + "double" + times(dim, "[]") + " data = array.getData();" + newLine(0);
+
+        multiplyMethod += newLine(0);
+        String[] pieces = genPieces("data", dim);
+        for (int i = dim; i > 0; i--) {
+            multiplyMethod += indent(2 + dim - i) + forLine(i, pieces[dim - i]) + newLine(0);
+        }
+
+        multiplyMethod += indent(2 + dim) + "data";
+        for (int i = dim; i > 0; i--) {
+            multiplyMethod += "[x" + i + "]";
+        }
+        multiplyMethod += " *= scaler;" + newLine(0);
+        for(int i = dim - 1; i >= 0; i--) {
+            multiplyMethod += indent(2 + i) + "}" + newLine(0);
+        }
+
+        multiplyMethod += indent(2) + "return new " + classString + "(data);" + newLine(0);
+        multiplyMethod += indent(1) + "}" + newLine(0);
+
+        return multiplyMethod;
+    }
+
+    public static String genMatmulMethod(String classString, int dim, String arrayString, String arrayLessString) {
+
+        String matmulMethod = newLine(0);
+        matmulMethod += indent(1) + "public static " + classString + " matmul("
+                + classString + " mul, " + classString + " toMul) {" + newLine(0);
+        matmulMethod += indent(2) + "checkDims(mul, toMul);" + newLine(0);
+        matmulMethod += indent(2) + "return new " + classString + "(matmul(mul.getData(), toMul.getData()));" + newLine(0);
+        matmulMethod += indent(1) + "}";
+
+        matmulMethod += newLine(0);
+        matmulMethod += newLine(0);
+        matmulMethod += indent(1) + "public static " + arrayString + " matmul(" + arrayString
+                + " mul, " + arrayString + " toMul) {" + newLine(0) + newLine(0);
+
+        matmulMethod += indent(2) + arrayString + " result = new double[";
+        for (int i = 0; i < dim - 1; i++) {
+            matmulMethod += "mul" + times(i, "[0]") + ".length][";
+        }
+        matmulMethod += "toMul" + times(dim - 1, "[0]") + ".length];" + newLine(0);
+
+        matmulMethod += newLine(0);
+        String[] pieces = genPieces("mul", dim);
+        for (int i = dim; i > 2; i--) {
+            matmulMethod += indent(2 + dim-i) + forLine(i, pieces[dim - i]) + newLine(0);
+        }
+        matmulMethod += indent(dim) + "result";
+        for (int i = dim; i > 2; i--) {
+            matmulMethod += "[x" + i + "]";
+        }
+        matmulMethod += " =  DataDouble2d.matmul(mul";
+        for (int i = dim; i > 2; i--) {
+            matmulMethod += "[x" + i + "]";
+        }
+        matmulMethod += ", toMul";
+        for (int i = dim; i > 2; i--) {
+            matmulMethod += "[x" + i + "]";
+        }
+        matmulMethod += ", MUL_TILE_SIZE);" + newLine(0);
+        for (int i = dim; i > 2; i--) {
+            matmulMethod += indent(i - 1) + "}";
+            matmulMethod += newLine(0);
+        }
+
+        matmulMethod += newLine(0);
+        matmulMethod += indent(2) + "return result;";
+        matmulMethod += newLine(0);
+        matmulMethod += indent(1) + "}";
+
+        return matmulMethod;
+    }
+
 
     public static String genVerifyDimsMethod(int dim) {
         String fileString = newLine(0);
@@ -311,6 +609,19 @@ public class DDClassGenerator {
         return fileString;
     }
 
+    public static String[] genPieces(String arrayName, int dimensions) {
+        String[] pieces = new String[dimensions];
+        for (int i = 0; i < dimensions; i++) {
+            String p = arrayName;
+            for (int j = 0; j < i; j++) {
+                p += "[0]";
+            }
+            p += ".length";
+            pieces[i] = p;
+        }
+        return pieces;
+    }
+
     public static String[] genLengthPieces(int dimensions) {
         String[] pieces = new String[dimensions];
         for (int i = 0; i < dimensions; i++) {
@@ -356,6 +667,10 @@ public class DDClassGenerator {
 
     public static String newLine(int indent) {
         return "\n" + indent(indent);
+    }
+
+    public static String newLine() {
+        return "\n";
     }
 
     public static String genToString(int dim) {
@@ -455,30 +770,4 @@ public class DDClassGenerator {
 //        return sb.toString();
 //    }
 
-    public static String genGetMethod(int dim, int acc) {
-        String method = newLine(0);
-        method += indent(1) + "public double";
-        for (int i = 0; i < dim - acc; i++) {
-            method += "[]";
-        }
-
-        method += " get(";
-        for (int i = 0; i < acc; i++) {
-            method += "int x" + (i+1);
-            method += (i == acc - 1)? ") {" : ", ";
-        }
-        method += newLine(0);
-
-        method +=  indent(2) + "return data";
-        for (int i = acc; i > 0; i--) {
-            method += "[x" + i + "]";
-        }
-        method += ";";
-        method += newLine(0);
-
-        method += indent(1) + "}";
-        newLine(0);
-
-        return method;
-    }
 }

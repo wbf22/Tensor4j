@@ -8,25 +8,24 @@ import java.util.Random;
 
 import com.freedommuskrats.brarrays.df;
 
+import static com.freedommuskrats.brarrays.data.DataDouble3d.matmul;
 import static com.freedommuskrats.brarrays.util.ArrayGen.*;
 import static com.freedommuskrats.brarrays.util.ArrayGen.genArray4d;
+import static com.freedommuskrats.brarrays.util.GeneralUtil.println;
 import static com.freedommuskrats.brarrays.util.PrimitiveConversion.toPrimitive;
 
 class dfTest {
 
     @Test
     void testStuff() {
-        double[][][] start = toPrimitive(genArray3d(Double.class, 1.0, new int[]{4, 3, 2}), 0.0);
-        double[][][] sec = toPrimitive(genArray3d(Double.class, 2.0, new int[]{1, 3, 2}), 0.0);
-        DataDouble3d d3 = new DataDouble3d(start);
-        DataDouble3d d3Sec = new DataDouble3d(sec);
-        d3.append(d3Sec, 0);
+        DataDouble3d a = new DataDouble3d(2, 2, 2);
+        DataDouble3d b = new DataDouble3d(3, 2, 2);
 
+        println(a);
+        println(b);
 
-        System.out.println(d3);
-        System.out.println("***************");
-        System.out.println(d3.get(0));
-        System.out.println(d3.get(4));
+        println(matmul(a, b));
+
     }
 
     @Test
