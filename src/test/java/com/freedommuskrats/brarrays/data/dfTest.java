@@ -19,12 +19,21 @@ class dfTest {
     @Test
     void testStuff() {
         DataDouble3d a = new DataDouble3d(2, 2, 2);
-        DataDouble3d b = new DataDouble3d(3, 2, 2);
 
+        println("****");
         println(a);
+
+        DataDouble4d b = a.unsqueeze(3);
+        println("****");
         println(b);
 
-        println(matmul(a, b));
+        a = new DataDouble3d(2, 2, 1);
+        println("****");
+        println(a);
+
+        DataDouble2d c = a.squeeze(2);
+        println("****");
+        println(c);
 
     }
 

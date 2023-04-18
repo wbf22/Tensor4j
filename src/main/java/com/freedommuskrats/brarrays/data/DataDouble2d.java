@@ -13,7 +13,6 @@ public class DataDouble2d extends DfData {
 
     private double[][] data;
     private int dims;
-    private int precision = 0;
 
     public DataDouble2d(double[][] data) {
         this.data = data;
@@ -223,7 +222,7 @@ public class DataDouble2d extends DfData {
         for (int y = 0; y < data.length; y++) {
             sb.append("[");
             for (int x = 0; x < data[0].length; x++) {
-                sb.append(roundPrint(data[y][x], precision));
+                sb.append(roundPrint(data[y][x], 4));
                 if (x != data[0].length - 1) {
                     sb.append(", ");
                 }

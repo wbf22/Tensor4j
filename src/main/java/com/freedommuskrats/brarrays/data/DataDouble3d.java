@@ -347,14 +347,14 @@ public class DataDouble3d extends DfData {
 
     /**
      * <pre>
+     * You shouldn't use this method directly. It is called by other
+     * matmul methods.
+     *
      * This method performs matrix multiplication on two arrays. It uses a
      * tiling approach to reduce the number of cache misses. This greatly
      * improves the speed of matrix multiplications. There are other methods
-     * for multiplications of square matrices that we do not currently use
-     * could be faster for those specific cases.
-     *
-     * You shouldn't use this method directly. It is called by other
-     * matmul methods.
+     * for multiplications of square matrices that we do not currently use,
+     * but could be faster for those specific cases.
      *
      * @param mul
      * @param toMul
@@ -405,6 +405,131 @@ public class DataDouble3d extends DfData {
             );
         }
 
+    }
+
+
+    public void reshape(int dim1, int dim2, int dim3) {
+        int[] shape = shape();
+        int[] remappings = new int[3];
+        Arrays.fill(remappings, -1);
+        boolean dim1F = false;
+        boolean dim2F = false;
+        boolean dim3F = false;
+        for (int i = 0; i < shape.length; i++) {
+            if (dim1 == shape[i] && !dim1F) {
+                remappings[0] = i;
+                dim1F = true;
+            }
+            else if (dim2 == shape[i] && !dim2F) {
+                remappings[1] = i;
+                dim2F = true;
+            }
+            else if (dim3 == shape[i] && !dim3F) {
+                remappings[2] = i;
+                dim3F = true;
+            }
+            else {
+                throw new DataException("For reshape the given dimensions must be " +
+                        "the same as current dimensions howbeit in a different order.");
+            }
+        }
+
+        double[][][] newData = new double[shape[remappings[2]]][shape[remappings[1]]][shape[remappings[0]]];
+
+        int[] indices = new int[3];
+        for (int x1 = 0; x1 < data[0][0].length; x1++) {
+            for (int x2 = 0; x2 < data[0].length; x2++) {
+                for (int x3 = 0; x3 < data.length; x3++) {
+                    Arrays.fill(indices, -1);
+                    for (int i = 0; i < indices.length; i++) {
+                        if (remappings[i] == 0) {
+                            indices[i] = x1;
+                        }
+                        if (remappings[i] == 1) {
+                            indices[i] = x2;
+                        }
+                        if (remappings[i] == 2) {
+                            indices[i] = x3;
+                        }
+                    }
+                    newData[indices[2]][indices[1]][indices[0]] = data[x3][x2][x1];
+                }
+            }
+        }
+        this.data = newData;
+    }
+
+    public DataDouble4d unsqueeze(int dim) {
+        double[][][][] newData;
+        if (dim == 0) {
+            newData = new double[data.length][data[0].length][data[0][0].length][1];
+        }
+        else if (dim == 1) {
+            newData = new double[data.length][data[0].length][1][data[0][0].length];
+        }
+        else if (dim == 2) {
+            newData = new double[data.length][1][data[0].length][data[0][0].length];
+        }
+        else if (dim == 3) {
+            newData = new double[1][data.length][data[0].length][data[0][0].length];
+        }
+        else {
+            throw new DataException("Dimension must be between 0 and 3");
+        }
+
+        for (int x1 = 0; x1 < data[0][0].length; x1++) {
+            for (int x2 = 0; x2 < data[0].length; x2++) {
+                for (int x3 = 0; x3 < data.length; x3++) {
+                    if (dim == 0) {
+                        newData[x3][x2][x1][0] = data[x3][x2][x1];
+                    }
+                    else if (dim == 1) {
+                        newData[x3][x2][0][x1] = data[x3][x2][x1];
+                    }
+                    else if (dim == 2) {
+                        newData[x3][0][x2][x1] = data[x3][x2][x1];
+                    }
+                    else if (dim == 3) {
+                        newData[0][x3][x2][x1] = data[x3][x2][x1];
+                    }
+                }
+            }
+        }
+
+        return new DataDouble4d(newData);
+    }
+
+    public DataDouble2d squeeze(int dim) {
+        int[] shape = shape();
+        if (shape[dim] > 1) {
+            throw new DataException("No dimension of size 1 found that can be squeezed");
+        }
+
+        int[] newShape = new int[2];
+        int newIndex = 0;
+        for (int i = 0; i < shape.length; i++) {
+            if (i != dim) {
+                newShape[newIndex] = shape[i];
+                newIndex++;
+            }
+        }
+
+        double[][] newData = new double[newShape[1]][newShape[0]];
+        for (int x1 = 0; x1 < newData[0].length; x1++) {
+            for (int x2 = 0; x2 < newData.length; x2++) {
+                if (dim == 0) {
+                    newData[x2][x1] = data[x2][x1][0];
+                }
+                else if (dim == 1) {
+                    newData[x2][x1] = data[x2][0][x1];
+                }
+                else if (dim == 2) {
+                    newData[x2][x1] = data[0][x2][x1];
+                }
+            }
+        }
+
+        return new DataDouble2d(newData);
     }
 
 

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.freedommuskrats.brarrays.util.ArrayGen.genArray2d;
 import static com.freedommuskrats.brarrays.util.ArrayGen.genArray3d;
+import static com.freedommuskrats.brarrays.util.GeneralUtil.println;
 import static com.freedommuskrats.brarrays.util.PrimitiveConversion.toPrimitive;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -124,5 +125,19 @@ public class DataDouble3dTest {
         assertEquals(res.get(1, 0, 1), 18.0);
         assertEquals(res.get(1, 1, 1), 14.0);
         assertEquals(res.get(0, 2, 2), 6.0);
+    }
+
+    @Test
+    void reshape() {
+//        DataDouble3d d = new DataDouble3d(1,2,3);
+//        DataDouble3d d = new DataDouble3d(1,3,2);
+//        DataDouble3d d = new DataDouble3d(2,1,3);
+//        DataDouble3d d = new DataDouble3d(2,3,1);
+//        DataDouble3d d = new DataDouble3d(3,1,2);
+        DataDouble3d d = new DataDouble3d(3,2,1);
+
+        println(d);
+        d.reshape(3,2,1);
+        println(d);
     }
 }

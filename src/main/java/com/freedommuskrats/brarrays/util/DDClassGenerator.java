@@ -14,7 +14,7 @@ public class DDClassGenerator {
     public final static String INDENT = "    ";
 
     public static void generate(int dimension, String savePath) throws IOException {
-        if (dimension < 3) {
+        if (dimension < 4) {
             throw new IllegalArgumentException("Dimension must be greater than 3. We don't want to overwrite the existing classes.");
         }
 
@@ -554,7 +554,6 @@ public class DDClassGenerator {
         return matmulMethod;
     }
 
-
     public static String genVerifyDimsMethod(int dim) {
         String fileString = newLine(0);
 
@@ -608,6 +607,8 @@ public class DDClassGenerator {
 
         return fileString;
     }
+
+    public static String reshape(){}
 
     public static String[] genPieces(String arrayName, int dimensions) {
         String[] pieces = new String[dimensions];
