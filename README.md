@@ -41,7 +41,7 @@ Here's a list of provided methods:
 ### Creating a tensor
 Create a random 3d tensor with 
 ```
-Tensor3d myTensor = new Tensor3d(3, 1, 2);
+Tensor3d myTensor = new Tensor3d(3, 2, 1);
 ```
 
 This creates a tensor that has this shape after calling the toString method
