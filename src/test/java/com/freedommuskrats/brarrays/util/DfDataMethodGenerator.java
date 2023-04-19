@@ -7,7 +7,7 @@ public class DfDataMethodGenerator {
         int dims = 5;
 
         for (int i = 1; i <= dims; i++) {
-            System.out.print("    public DataDouble" + i + "d get" + "(");
+            System.out.print("    public Tensor" + i + "d get" + "(");
             System.out.print("int " + 'x' + (i));
             System.out.println(") {");
 

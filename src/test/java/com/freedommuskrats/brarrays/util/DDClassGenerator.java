@@ -5,25 +5,38 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import static com.freedommuskrats.brarrays.util.GeneralUtil.newLine;
-import static com.freedommuskrats.brarrays.util.GeneralUtil.roundPrint;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class DDClassGenerator {
 
     public final static String INDENT = "    ";
 
+    private static List<String> documentation = new ArrayList<>();
+
     public static void generate(int dimension, String savePath) throws IOException {
-        if (dimension < 4) {
+        if (dimension < 3) {
             throw new IllegalArgumentException("Dimension must be greater than 3. We don't want to overwrite the existing classes.");
         }
 
+        String docs = Files.readString(
+                Path.of("src/test/resources/documentationSource.txt"),
+                StandardCharsets.UTF_8
+        );
+        documentation.addAll(
+                Arrays.stream(docs.split("<break>"))
+//                        .map(s -> s.substring(0, s.length()-1))
+                        .toList()
+        );
+
+
         String classString = Files.readString(
-                Path.of("src/main/resources/dataDoubleClassGenSource.txt"),
+                Path.of("src/test/resources/dataDoubleClassGenSource.txt"),
                 StandardCharsets.UTF_8
         );
 
-        String className = "DataDouble" + dimension + "d";
+        String className = "Tensor" + dimension + "d";
 
         String arrayString = "double";
         for (int i = 0; i < dimension; i++) {
@@ -34,6 +47,10 @@ public class DDClassGenerator {
         for (int i = 0; i < dimension - 1; i++) {
             arrayStringLess += "[]";
         }
+
+        String classDoc = documentation.get(11);
+        classString = classString.replaceAll("<classDoc>", classDoc);
+
 
         String constructors = genContructors(dimension, className);
         classString = classString.replaceAll("<constructors>", constructors);
@@ -78,6 +95,15 @@ public class DDClassGenerator {
         String verifyDimMethod = genVerifyDimsMethod(dimension);
         verifyDimMethod += genVerifyDimsMethod(dimension - 1);
         classString = classString.replaceAll("<verifyDimMethod>", verifyDimMethod);
+
+        String reshapeMethod = genReshape(arrayString, dimension);
+        classString = classString.replaceAll("<reshapeMethod>", reshapeMethod);
+
+        String unsqueezeMethod = genUnsqeeze(dimension);
+        classString = classString.replaceAll("<unsqueezeMethod>", unsqueezeMethod);
+
+        String squeezeMethod = genSqueeze(dimension);
+        classString = classString.replaceAll("<squeezeMethod>", squeezeMethod);
 
         String toStringMethod = genToString(dimension);
         classString = classString.replaceAll("<toString>", toStringMethod);
@@ -142,7 +168,7 @@ public class DDClassGenerator {
         for (int i = 4; i <= dimension; i++) {
             constructors += indent(1) + " * @param dim" + i + " The dim" + i + " size of the array.\n";
         }
-        constructors += newLine(0) + "     */" + newLine(0);
+        constructors += "     */" + newLine(0);
         constructors += indent(1) + "public " + className + "(";
         for(int i = 1; i <= dimension; i++) {
             constructors += "int dim" + i;
@@ -172,7 +198,9 @@ public class DDClassGenerator {
         constructors += indent(1) + "}" + newLine(0);
 
 
+        constructors += newLine();
         for (int k = 0; k < 2; k++) {
+            constructors += documentation.get(k);
             constructors += indent(1) + "public static " + className;
             constructors += (k==0)? " zeros(" : " ones(";
             for(int i = 1; i <= dimension; i++) {
@@ -197,8 +225,9 @@ public class DDClassGenerator {
 
     public static String genGetMethod(int dim, int acc) {
         String method = newLine(0);
+        method += documentation.get(2);
         method += indent(1) + "public ";
-        method += (dim == acc) ? "double" : "DataDouble" + (dim - acc) + "d";
+        method += (dim == acc) ? "double" : "Tensor" + (dim - acc) + "d";
 
         method += " get(";
         for (int i = dim - acc; i < dim; i++) {
@@ -208,7 +237,7 @@ public class DDClassGenerator {
         method += newLine(0);
 
         method += indent(2) + "return ";
-        method += (dim == acc) ? "" : "new DataDouble" + (dim - acc) + "d";
+        method += (dim == acc) ? "" : "new Tensor" + (dim - acc) + "d";
         method += "(data";
         for (int i = dim; i > dim - acc; i--) {
             method += "[x" + i + "]";
@@ -228,9 +257,11 @@ public class DDClassGenerator {
         String[] valTypes = new String[dim];
         valTypes[0] = "double";
         for (int i = 1; i < dim; i++) {
-            valTypes[i] = "DataDouble" + i + "d";
+            valTypes[i] = "Tensor" + i + "d";
         }
 
+
+        method += documentation.get(3);
         int acc = dim;
         method += indent(1) + "public void set(";
         for (int i = 0; i < acc; i++) {
@@ -255,6 +286,7 @@ public class DDClassGenerator {
 
     public static String genSliceMethod(String className, int dim, String arrayString) {
         String method = newLine(0);
+        method += documentation.get(4);
         method += indent(1) + "public " + className + " slice(";
         for (int i = 0; i < dim; i++) {
             method += "Range x" + (i+1) + "Range";
@@ -478,6 +510,8 @@ public class DDClassGenerator {
     public static String genMultiplyMethod(String classString, int dim, String arrayString, String arrayLessString) {
 
         String multiplyMethod = newLine(0);
+
+        multiplyMethod += documentation.get(5);
         multiplyMethod += indent(1) + "public static " + classString + " multiply("
                 + classString + " array, double scalar) {" + newLine(0);
         multiplyMethod += indent(2) + "double" + times(dim, "[]") + " data = array.getData();" + newLine(0);
@@ -492,7 +526,7 @@ public class DDClassGenerator {
         for (int i = dim; i > 0; i--) {
             multiplyMethod += "[x" + i + "]";
         }
-        multiplyMethod += " *= scaler;" + newLine(0);
+        multiplyMethod += " *= scalar;" + newLine(0);
         for(int i = dim - 1; i >= 0; i--) {
             multiplyMethod += indent(2 + i) + "}" + newLine(0);
         }
@@ -506,6 +540,8 @@ public class DDClassGenerator {
     public static String genMatmulMethod(String classString, int dim, String arrayString, String arrayLessString) {
 
         String matmulMethod = newLine(0);
+
+        matmulMethod += documentation.get(6);
         matmulMethod += indent(1) + "public static " + classString + " matmul("
                 + classString + " mul, " + classString + " toMul) {" + newLine(0);
         matmulMethod += indent(2) + "checkDims(mul, toMul);" + newLine(0);
@@ -514,6 +550,7 @@ public class DDClassGenerator {
 
         matmulMethod += newLine(0);
         matmulMethod += newLine(0);
+        matmulMethod += documentation.get(7);
         matmulMethod += indent(1) + "public static " + arrayString + " matmul(" + arrayString
                 + " mul, " + arrayString + " toMul) {" + newLine(0) + newLine(0);
 
@@ -532,7 +569,7 @@ public class DDClassGenerator {
         for (int i = dim; i > 2; i--) {
             matmulMethod += "[x" + i + "]";
         }
-        matmulMethod += " =  DataDouble2d.matmul(mul";
+        matmulMethod += " =  Tensor2d.matmul(mul";
         for (int i = dim; i > 2; i--) {
             matmulMethod += "[x" + i + "]";
         }
@@ -557,7 +594,7 @@ public class DDClassGenerator {
     public static String genVerifyDimsMethod(int dim) {
         String fileString = newLine(0);
 
-        fileString +=  indent(1) + "public static void verifyDimensions(double";
+        fileString +=  indent(1) + "private static void verifyDimensions(double";
         for (int i = 0; i < dim; i++) {
             fileString += "[]";
         }
@@ -608,7 +645,214 @@ public class DDClassGenerator {
         return fileString;
     }
 
-    public static String reshape(){}
+    public static String genReshape(String arrayString, int dim){
+        String method = newLine(0);
+
+        method += documentation.get(8);
+        method += indent(1) + "public void reshape(";
+        for (int i = 0; i < dim; i++) {
+            method += "int dim" + (i + 1);
+            if (i != dim - 1) {
+                method += ", ";
+            }
+        }
+        method += ") {" + newLine(0);
+
+        method += indent(2) + "int[] shape = shape();" + newLine(0);
+        method += indent(2) + "int[] remappings = new int[" + dim + "];" + newLine(0);
+        for (int i = 1; i <= dim; i++) {
+            method += indent(2) + "boolean dim" + i + "F = false;" + newLine(0);
+        }
+
+        method += indent(2) + "for (int i = 0; i < shape.length; i++) {" + newLine(0);
+        method += indent(3) + "if (dim1 == shape[i] && !dim1F) {" + newLine(0);
+        method += indent(4) + "remappings[0] = i;" + newLine(0);
+        method += indent(4) + "dim1F = true;" + newLine(0);
+        method += indent(3) + "}" + newLine(0);
+        for(int i =2; i <= dim; i++) {
+            method += indent(3) + "else if (dim" + i + " == shape[i] && !dim" + i + "F) {" + newLine(0);
+            method += indent(4) + "remappings[" + (i-1) + "] = i;" + newLine(0);
+            method += indent(4) + "dim" + i + "F = true;" + newLine(0);
+            method += indent(3) + "}" + newLine(0);
+        }
+        method += "            else {\n" +
+                "                throw new DataException(\"For reshape the given dimensions must be \" +\n" +
+                "                        \"the same as current dimensions howbeit in a different order.\");\n" +
+                "            }";
+        method += newLine();
+
+        method += indent(2) + "}" + newLine(0) + newLine();
+
+        method += indent(2) + arrayString + " newData = new double";
+        for (int i = dim - 1; i >= 0; i--) {
+            method += "[shape[remappings[" + i + "]]]";
+        }
+        method += ";" + newLine() + newLine();
+
+        method += indent(2) + "int[] indices = new int[" + dim + "];" + newLine(0);
+        String[] pieces = genPieces("data", dim);
+        for (int i = 1; i <= dim; i++) {
+            method += indent(1 + i) + forLine(i, pieces[dim-i]) + newLine();
+        }
+        method += indent(2 + dim) + "for (int i = 0; i < indices.length; i++) {" + newLine(0);
+        for (int i = 0; i < dim; i++) {
+            method += indent(3 + dim) + "if (remappings[i] == " + i + ") {" + newLine(0);
+            method += indent(4 + dim) + "indices[i] = x" + (i+1) + ";" + newLine(0);
+            method += indent(3 + dim) + "}" + newLine(0);
+        }
+        method += indent(2 + dim) + "}" + newLine(0);
+
+        method += indent(2 + dim) + "newData";
+        for (int j = dim - 1; j >= 0; j--) {
+            method += "[indices[" + j + "]]";
+        }
+        method += " =  data";
+        for (int j = dim; j > 0; j--) {
+            method += "[x" + j + "]";
+        }
+        method += ";" + newLine(0);
+
+        for (int i = 0; i < dim; i++) {
+            method += indent(1 + dim - i) + "}" + newLine(0);
+        }
+
+        method += indent(2) + "this.data = newData;" + newLine(0);
+        method += indent(1) + "}" + newLine(0);
+
+        return method;
+    }
+
+    public static String genUnsqeeze(int dim) {
+        String method = newLine(0);
+
+        method += documentation.get(9);
+        method += indent(1) + "public Tensor" + (dim+1) + "d unsqueeze(int dim) {" + newLine(0);
+        method += indent(2) + "double" + times(dim+1, "[]") + " newData;" + newLine(0);
+
+        method += indent(2);
+        for (int i = 0; i < dim+1; i++) {
+            method += "if (dim == " + i + ") {" + newLine(0);
+            method += indent(3) + "newData = new double";
+            for (int j = 0; j < dim+1; j++) {
+                int t = (j > dim-i)? j-1 : j;
+                method += (j == dim-i)? "[1]" : "[data" + times(t, "[0]") + ".length]";
+            }
+            method += ";" + newLine(0);
+            method += indent(2) + "}" + newLine(0);
+            method += indent(2) + "else ";
+        }
+
+        method += "{" + newLine(0);
+        method += indent(3) + "throw new DataException(\"Dimension must be between 0 and "
+                + dim + "\");" + newLine();
+
+        method += indent(2) + "}" + newLine() + newLine();
+
+        String[] pieces = genPieces("data", dim);
+        for (int i = 1; i <= dim; i++) {
+            method += indent(1 + i) + forLine(i, pieces[dim-i]) + newLine();
+        }
+        method += indent(2 + dim);
+        for (int i = 0; i <= dim; i++) {
+            method += "if (dim == " + i + ") {" + newLine(0);
+            method += indent(3 + dim) + "newData";
+            int index = dim;
+            for (int j = dim+1; j > 0; j--) {
+                if (j == i+1) {
+                    method += "[0]";
+                } else {
+                    method += "[x" + index + "]";
+                    index--;
+                }
+            }
+            method += " =  data";
+            for (int j = dim; j > 0; j--) {
+                method += "[x" + j + "]";
+            }
+            method += ";" + newLine(0);
+            method += indent(2 + dim) + "}" + newLine(0);
+            method += (i==dim)? "" : indent(2 + dim) + "else ";
+        }
+
+        for (int i = 0; i < dim; i++) {
+            method += indent(1 + dim - i) + "}" + newLine(0);
+        }
+
+        method += newLine();
+        method += indent(2) + "return new Tensor" + (dim+1) + "d(newData);" + newLine(0);
+
+        method += indent(1) + "}" + newLine(0);
+
+        return method;
+    }
+
+    public static String genSqueeze(int dim) {
+        String method = newLine(0);
+
+        method += documentation.get(10);
+        method += indent(1) + "public Tensor" + (dim-1) + "d squeeze(int dim) {" + newLine(0);
+        method += indent(2) + "int[] shape = shape();" + newLine();
+
+        method += indent(2) + "if (shape[dim] > 1) {" + newLine(0);
+        method += indent(3) + "throw new DataException(\"Dim " + dim + " must be of size 1 or 0 but was \" + shape[dim]);" + newLine();
+        method += indent(2) + "}" + newLine() + newLine();
+
+        method += indent(2) + "int[] newShape = new int[" + (dim-1) + "];" + newLine();
+        method += indent(2) + "int newIndex = 0;" + newLine();
+
+        method += indent(2) + "for (int i = 0; i < shape.length; i++) {" + newLine();
+        method += indent(3) + "if (i != dim) {" + newLine();
+        method += indent(4) + "newShape[newIndex] = shape[i];" + newLine();
+        method += indent(4) + "newIndex++;" + newLine();
+        method += indent(3) + "}" + newLine();
+        method += indent(2) + "}" + newLine();
+
+        method += indent(2) + "double" + times(dim-1, "[]") + " newData = new double";
+        for (int i = dim-1; i > 0; i--) {
+            method += "[newShape[" + i + "]]";
+        }
+        method += ";" + newLine();
+
+
+        String[] pieces = genPieces("newData", dim);
+        for (int i = 1; i < dim; i++) {
+            method += indent(1 + i) + forLine(i, pieces[dim-1-i]) + newLine();
+        }
+        method += indent(1 + dim);
+        for (int i = 0; i < dim; i++) {
+            method += "if (dim == " + i + ") {" + newLine(0);
+            method += indent(2 + dim) + "newData";
+            for (int j = dim-1; j > 0; j--) {
+                method += "[x" + j + "]";
+            }
+
+            int index = dim-1;
+            method += " =  data";
+            for (int j = dim-1; j >= 0; j--) {
+                if (j == i) {
+                    method += "[0]";
+                } else {
+                    method += "[x" + index + "]";
+                    index--;
+                }
+            }
+
+            method += ";" + newLine(0);
+            method += indent(2 + dim) + "}" + newLine(0);
+            method += (i==dim-1)? "" : indent(1 + dim) + "else ";
+        }
+
+        for (int i = 0; i < dim-1; i++) {
+            method += indent(1 + dim - i) + "}" + newLine(0);
+        }
+
+        method += newLine();
+        method += indent(2) + "return new Tensor" + (dim-1) + "d(newData);" + newLine(0);
+
+        method += indent(1) + "}" + newLine(0);
+
+        return method;
+    }
 
     public static String[] genPieces(String arrayName, int dimensions) {
         String[] pieces = new String[dimensions];

@@ -1,9 +1,9 @@
-package com.freedommuskrats.brarrays.data;
+package com.freedommuskrats.brarrays.junk.old;
 
-import com.freedommuskrats.brarrays.df;
+import com.freedommuskrats.brarrays.data.DfData;
 import com.freedommuskrats.brarrays.exception.DataException;
 
-import static com.freedommuskrats.brarrays.util.DimUtil.verifyDimensions;
+import static com.freedommuskrats.brarrays.junk.old.DimUtil.verifyDimensions;
 import static com.freedommuskrats.brarrays.util.GeneralUtil.roundPrint;
 
 public class DataDouble2d extends DfData {
@@ -51,13 +51,7 @@ public class DataDouble2d extends DfData {
         data[index[0]][index[1]] = (double) value;
     }
 
-    public df unsqueeze(int dim) {
-        return new df(null);
-    }
 
-    public df squeeze() {
-        return new df(null);
-    }
 
     public void append(DataDouble2d toAppend, int dim) {
         if (dim < 0 || dim > dims - 1) {

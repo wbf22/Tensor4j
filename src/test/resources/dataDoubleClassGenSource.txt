@@ -1,0 +1,154 @@
+package com.freedommuskrats.brarrays.data;
+
+import com.freedommuskrats.brarrays.exception.DataException;
+
+import java.util.Random;
+import java.util.Arrays;
+
+import static com.freedommuskrats.brarrays.data.Tensor2d.MUL_TILE_SIZE;
+import static com.freedommuskrats.brarrays.data.Range.range;
+import static com.freedommuskrats.brarrays.util.GeneralUtil.roundPrint;
+import static com.freedommuskrats.brarrays.util.GeneralUtil.newLine;
+
+<classDoc>
+public class Tensor<num>d extends DfData {
+    private <arrayType> data;
+    private int dims;
+
+
+    <constructors>
+
+    /**
+     * You probably shouldn't use this.
+     * Create a new Tensor object with the given data.
+     * @param data The data to use.
+     */
+    public Tensor<num>d(<arrayType> data) {
+        this.data = data;
+        this.dims = <num>;
+    }
+
+
+    /**
+     * Returns the array this object provides an abstraction for.
+     * You probably shouldn't use this
+     * @return
+     */
+    public <arrayType> getData() {
+        return data;
+    }
+
+    <getMethod>
+
+    <setMethod>
+
+    /**
+     * Returns the shape of the array.
+     * @return
+     */
+    @Override
+    public int[] shape() {
+        return new int[]{<shape>};
+    }
+
+    <sliceMethod>
+
+    /**
+     * <pre>
+     * Appends the given array to the dimension of this array. Can be used like
+     * cat() and vstack() in other libraries. Make sure the dimensions match for
+     * what you're doing.
+     *
+     * Example in 2d:
+     *
+     * dim 1:
+     *      1, 2, 3     append    7, 8, 9     becomes    1, 2, 3
+     *      4, 5, 6                                      4, 5, 6
+     *                                                   7, 8, 9
+     *
+     * dim 0:
+     *      1, 2      append    3     becomes    1, 2, 3
+     *      4, 5                6                4, 5, 6
+     *
+     *
+     * @param toAppend
+     * @param dim
+     * </pre>
+     */
+    public void append(Tensor<num>d toAppend, int dim) {
+        if (dim < 0 || dim > dims) {
+            throw new DataException(
+                    String.format("Can't append on dim %s for df array of size %s. " +
+                            "'int dim' must be greater than zero and less than the dimension of the array", dim, dims)
+            );
+        }
+
+        <arrayType> ap = toAppend.getData();
+
+        <appendMethod>
+
+    }
+
+    /**
+     * <pre>
+     * Appends the given array to the dimension of this array. Can be used like
+     * cat() and vstack() in other libraries. This method appends arrays of one
+     * dimension less than the array it is called on. It can
+     * only append on the last dimension.
+     *
+     * Example in 3d:
+     *
+     *
+     * dim 1:
+     *      1, 2      append   10,11     becomes    1, 2
+     *      4, 5               12,13                4, 5
+     *
+     *      6, 7                                    6, 7
+     *      8, 9                                    8, 9
+     *
+     *                                              10,11
+     *                                              12,13
+     *
+     * @param toAppend
+     * </pre>
+     */
+    public void append(Tensor<numLess>d toAppend) {
+
+        <arrayTypeLess> ap = toAppend.getData();
+
+        <appendLessMethod>
+
+    }
+
+    <mulitplyMethod>
+
+    <matmulMethod>
+
+    <verifyDimMethod>
+
+    <reshapeMethod>
+
+    <unsqueezeMethod>
+
+    <squeezeMethod>
+
+    /**
+     * <pre>
+     * Useful toString method. Displayed with first two dimensions (x and y)
+     * as width and height respectively. Other dimensions are displayed in a
+     * sort of list fashion.
+     *
+     * Note: the x starts from 0 and goes to the right. They y dimension starts at 0
+     * and goes downwards.
+     *
+     * </pre>
+     * @return
+     */
+    @Override
+    public String toString() {
+        <toString>
+    }
+
+
+
+}

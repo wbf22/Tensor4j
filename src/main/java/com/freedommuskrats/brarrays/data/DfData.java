@@ -2,29 +2,18 @@ package com.freedommuskrats.brarrays.data;
 
 import com.freedommuskrats.brarrays.exception.DataException;
 
+/**
+ * This is a work in progress
+ */
 public abstract class DfData {
 
 
     public abstract int[] shape();
 
 
-    public static DfData matMul(DfData toMul, DfData mul) {
-        // toMul * mul
-        checkDims(toMul, mul);
-
-        int[] thisShape = toMul.shape();
-        int[] mulShape = mul.shape();
-
-
-
-        return null;
-    }
-
     //https://www.iaeng.org/publication/WCE2010/WCE2010_pp1829-1833.pdf
     //https://stackoverflow.com/questions/64856174/an-efficient-way-to-multiply-two-object-matrixes
     //https://en.wikipedia.org/wiki/Matrix_multiplication_algorithm
-
-
     public static void checkDims(DfData toMul, DfData mul) {
         int[] thisShape = toMul.shape();
         int[] mulShape = mul.shape();

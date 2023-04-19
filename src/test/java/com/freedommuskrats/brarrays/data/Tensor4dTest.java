@@ -2,11 +2,12 @@ package com.freedommuskrats.brarrays.data;
 
 import org.junit.jupiter.api.Test;
 
-import static com.freedommuskrats.brarrays.util.ArrayGen.*;
-import static com.freedommuskrats.brarrays.util.PrimitiveConversion.toPrimitive;
+import static com.freedommuskrats.brarrays.junk.old.ArrayGen.genArray3d;
+import static com.freedommuskrats.brarrays.junk.old.ArrayGen.genArray4d;
+import static com.freedommuskrats.brarrays.junk.old.PrimitiveConversion.toPrimitive;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DataDoulbe4dTest {
+public class Tensor4dTest {
     @Test
     void append_dim0 () {
         double[][][][] start = toPrimitive(
@@ -15,8 +16,8 @@ public class DataDoulbe4dTest {
         double[][][][] sec = toPrimitive(
                 genArray4d(Double.class, 2.0, new int[]{1, 4, 2, 2}), 0.0
         );
-        DataDouble4d d3Start = new DataDouble4d(start);
-        DataDouble4d d3Sec = new DataDouble4d(sec);
+        Tensor4d d3Start = new Tensor4d(start);
+        Tensor4d d3Sec = new Tensor4d(sec);
         d3Start.append(d3Sec, 0);
 
 //        System.out.print(d3Start);
@@ -37,8 +38,8 @@ public class DataDoulbe4dTest {
         double[][][][] sec = toPrimitive(
                 genArray4d(Double.class, 2.0, new int[]{4, 1, 2, 2}), 0.0
         );
-        DataDouble4d d3Start = new DataDouble4d(start);
-        DataDouble4d d3Sec = new DataDouble4d(sec);
+        Tensor4d d3Start = new Tensor4d(start);
+        Tensor4d d3Sec = new Tensor4d(sec);
         d3Start.append(d3Sec, 1);
 
 //        System.out.print(d3Start);
@@ -59,8 +60,8 @@ public class DataDoulbe4dTest {
         double[][][][] sec = toPrimitive(
                 genArray4d(Double.class, 2.0, new int[]{4, 4, 3, 3}), 0.0
         );
-        DataDouble4d d3Start = new DataDouble4d(start);
-        DataDouble4d d3Sec = new DataDouble4d(sec);
+        Tensor4d d3Start = new Tensor4d(start);
+        Tensor4d d3Sec = new Tensor4d(sec);
         d3Start.append(d3Sec, 3);
 
 //        System.out.print(d3Start);
@@ -81,8 +82,8 @@ public class DataDoulbe4dTest {
         double[][][] sec = toPrimitive(
                 genArray3d(Double.class, 2.0, new int[]{4, 4, 3}), 0.0
         );
-        DataDouble4d d3Start = new DataDouble4d(start);
-        DataDouble3d d3Sec = new DataDouble3d(sec);
+        Tensor4d d3Start = new Tensor4d(start);
+        Tensor3d d3Sec = new Tensor3d(sec);
         d3Start.append(d3Sec);
 
 //        System.out.print(d3Start);

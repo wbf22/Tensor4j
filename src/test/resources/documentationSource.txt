@@ -1,0 +1,162 @@
+    /**
+     * Creates an array of zeros of the given dimensions. Use constructors for a random array.
+     * @return
+     */
+<break>
+    /**
+     * Creates an array of ones of the given dimensions. Use constructors for a random array.
+     * @return
+     */
+<break>
+    /**
+     * Returns the value at the given index. Use slice for more control
+     * @return
+     */
+<break>
+    /**
+     * Sets the value at the given index. Use append for more control or for along different dims
+     */
+<break>
+    /**
+     * <pre>
+     * Returns a slice of the array with the given ranges.
+     *
+     * Eg array.slice(Range.range(0, 10), Range.range(0, 10), Range.range(0, 10));
+     * Eg array.slice(Range.range(0, 10, 2), Range.all(), Range.all());
+     * @return
+     * </pre>
+     */
+<break>
+    /**
+     * Multiplies all values of an array by a scalar value.
+     * @param array
+     * @param scalar
+     * @return
+     */
+<break>
+    /**
+     * <pre>
+     * Performs a matrix multiplication on two arrays. Array dimensions must
+     * all match except the first two dimensions. For these dim 0 of the first
+     * array must match dim 1 of the second array. Dim 1 of the first array
+     * and dim 0 of the second array don't have to match
+     *
+     * Eg for 2d arrays: (3,2) * (1,3) = (1,2)
+     *  1,2,1  X    3       6
+     *  3,2,1       1  =    12
+     *              1
+     *
+     * Eg for 3d arrays: (2,2,2) * (3,2,2) = (3,2,2)
+     *  1,1    X     1,4,1     2, 6, 2
+     *  1,3          1,2,1  =  4,10, 4
+     *
+     *  1,3          1,1,5     4, 4, 8
+     *  1,1          1,1,1     2, 2, 6
+     *
+     * @param mul
+     * @param toMul
+     * @return
+     *
+     * </pre>
+     */
+<break>
+    /**
+     * <pre>
+     * You shouldn't use this method directly. It is called by other
+     * matmul methods.
+     *
+     * This method performs matrix multiplication on two arrays. It uses a
+     * tiling approach to reduce the number of cache misses. This greatly
+     * improves the speed of matrix multiplications. There are other methods
+     * for multiplications of square matrices that we do not currently use,
+     * but could be faster for those specific cases.
+     *
+     * @param mul
+     * @param toMul
+     * @return
+     * </pre>
+     */
+<break>
+    /**
+     * <pre>
+     * Reshapes an array to the given dimensions. Must have the same
+     * dimensions, howbeit in a different order.
+     * Eg. (1,2,3) reshape(2,3,1) = (2,3,1)
+     *
+     * Can be used to transpose an array as well.
+     * Eg. (1,2,3) reshape(3,2,1) = transpose
+     *
+     * </pre>
+     */
+ <break>
+     /**
+      * <pre>
+      * Adds a dimension of size 1 to an array.
+      *
+      * Eg. (3) unsqueeze(1) = (3,1)
+      * @param dim
+      * @return
+      * </pre>
+      */
+<break>
+    /**
+     * <pre>
+     * Removes a dimension of size 1 or 0 from an array.
+     *
+     * Eg. (1,3) unsqueeze(0) = (3)
+     * @param dim
+     * @return
+     * </pre>
+     */
+<break>
+/**
+ * <pre>
+ *
+ * Wrapping of double arrays that provides an convenient
+ * object for multidimensional math. Compare with numpy
+ * in python.
+ *
+ *
+ * <b>Format</b>
+ * For these tensors we think of the first two dimensions
+ * as the x and y, or width and height. The provided toString
+ * method is handy for visualizing the arrays, and can be
+ * used to the view the object in editors with debuggers like
+ * intellij. It shows the first two dimensions as width progressing
+ * right, and height progressing downwards. The other dims are
+ * shown with a sort of list like format.
+ *
+ *
+ * <b>Efficiency</b>
+ * Uses a more efficient method for matrix multiplication
+ * taking advantage of the systems' cache. Certain algorithms
+ * exist that are more efficient for square matrices, however
+ * this implementation does not include them.
+ *
+ *
+ * <b>Usage</b>
+ *
+ * Here's a list of provided methods:
+ * - get
+ * - set
+ * - shape
+ * - slice
+ * - append
+ * - multiply
+ * - matmul
+ * - dot
+ * - reshape
+ * - squeeze
+ * - unsqueeze
+ *
+ * See individual methods for details.
+ *
+ *
+ * Translations from common methods from other libraries:
+ * - cat, use append
+ * - vstack, use append
+ * - transpose, use reshape
+ *
+ *
+ * </pre>
+ */

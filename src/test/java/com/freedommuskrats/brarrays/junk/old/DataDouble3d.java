@@ -1,14 +1,16 @@
-package com.freedommuskrats.brarrays.data;
+package com.freedommuskrats.brarrays.junk.old;
 
+import com.freedommuskrats.brarrays.data.DfData;
+import com.freedommuskrats.brarrays.data.Range;
+import com.freedommuskrats.brarrays.data.Tensor4d;
 import com.freedommuskrats.brarrays.exception.DataException;
 
-import java.util.Random;
 import java.util.Arrays;
+import java.util.Random;
 
-import static com.freedommuskrats.brarrays.data.DataDouble2d.MUL_TILE_SIZE;
 import static com.freedommuskrats.brarrays.data.Range.range;
-import static com.freedommuskrats.brarrays.util.GeneralUtil.roundPrint;
 import static com.freedommuskrats.brarrays.util.GeneralUtil.newLine;
+import static com.freedommuskrats.brarrays.util.GeneralUtil.roundPrint;
 
 public class DataDouble3d extends DfData {
     private double[][][] data;
@@ -17,7 +19,7 @@ public class DataDouble3d extends DfData {
 
     
     /**
-     * Create a new DataDouble3d object with the given size and filler.
+     * Create a new Tensor3d object with the given size and filler.
      * @param dim1 The x size or width of the array.
      * @param dim2 The y size or height of the array.
      * @param dim3 The z size or depth of the array.
@@ -33,7 +35,7 @@ public class DataDouble3d extends DfData {
     }
 
     /**
-     * Create a new random DataDouble3d object with the given size.
+     * Create a new random Tensor3d object with the given size.
      * @param dim1 The x size or width of the array.
      * @param dim2 The y size or height of the array.
      * @param dim3 The z size or depth of the array.
@@ -70,7 +72,7 @@ public class DataDouble3d extends DfData {
 
 
     /**
-     * Create a new DataDouble3d object with the given data.
+     * Create a new Tensor3d object with the given data.
      * @param data The data to use.
      */
     public DataDouble3d(double[][][] data) {
@@ -112,16 +114,21 @@ public class DataDouble3d extends DfData {
 
     /**
      * Sets the value at the given index. Use append for more control
-     * @return
      */
     public void set(int x1, int x2, int x3, double val) {
         data[x3][x2][x1] = val;
     }
 
+    /**
+     * Sets the value at the given index. Use append for more control or for along different dims
+     */
     public void set(int x1, int x2, DataDouble1d val) {
         data[x2][x1] = val.getData();
     }
 
+    /**
+     * Sets the value at the given index. Use append for more control or for along different dims
+     */
     public void set(int x1, DataDouble2d val) {
         data[x1] = val.getData();
     }
@@ -137,11 +144,13 @@ public class DataDouble3d extends DfData {
     }
 
     /**
+     * <pre>
      * Returns a slice of the array with the given ranges.
      *
      * Eg array.slice(Range.range(0, 10), Range.range(0, 10), Range.range(0, 10));
      * Eg array.slice(Range.range(0, 10, 2), Range.all(), Range.all());
      * @return
+     * </pre>
      */
     public DataDouble3d slice(Range x1Range, Range x2Range, Range x3Range) {
         int[] x1Seq = x1Range.getSequence();
@@ -366,15 +375,13 @@ public class DataDouble3d extends DfData {
         double[][][] result = new double[mul.length][mul[0].length][toMul[0][0].length];
 
         for (int x3 = 0; x3 < mul.length; x3++) {
-            result[x3] =  DataDouble2d.matmul(mul[x3], toMul[x3], MUL_TILE_SIZE);
+            result[x3] =  DataDouble2d.matmul(mul[x3], toMul[x3], DataDouble2d.MUL_TILE_SIZE);
         }
 
         return result;
     }
 
-
-    
-    public static void verifyDimensions(double[][][] array, int[]expectedDimensions) {
+    private static void verifyDimensions(double[][][] array, int[]expectedDimensions) {
         if (array.length != expectedDimensions[0]) {
             throw new DataException(
                     String.format("Size of first dimension of array must be %s, but was %s", expectedDimensions[0], array.length)
@@ -393,7 +400,7 @@ public class DataDouble3d extends DfData {
     }
 
 
-    public static void verifyDimensions(double[][] array, int[]expectedDimensions) {
+    private static void verifyDimensions(double[][] array, int[]expectedDimensions) {
         if (array.length != expectedDimensions[0]) {
             throw new DataException(
                     String.format("Size of first dimension of array must be %s, but was %s", expectedDimensions[0], array.length)
@@ -407,11 +414,22 @@ public class DataDouble3d extends DfData {
 
     }
 
-
+    /**
+     * <pre>
+     * Reshapes an array to the given dimensions. Must have the same
+     * dimensions, howbeit in a different order.
+     *
+     * Can be used to transpose an array as well.
+     * Eg. (1,2,3) reshape(3,2,1) = transpose
+     *
+     * @param dim1
+     * @param dim2
+     * @param dim3
+     * </pre>
+     */
     public void reshape(int dim1, int dim2, int dim3) {
         int[] shape = shape();
         int[] remappings = new int[3];
-        Arrays.fill(remappings, -1);
         boolean dim1F = false;
         boolean dim2F = false;
         boolean dim3F = false;
@@ -440,7 +458,6 @@ public class DataDouble3d extends DfData {
         for (int x1 = 0; x1 < data[0][0].length; x1++) {
             for (int x2 = 0; x2 < data[0].length; x2++) {
                 for (int x3 = 0; x3 < data.length; x3++) {
-                    Arrays.fill(indices, -1);
                     for (int i = 0; i < indices.length; i++) {
                         if (remappings[i] == 0) {
                             indices[i] = x1;
@@ -459,7 +476,16 @@ public class DataDouble3d extends DfData {
         this.data = newData;
     }
 
-    public DataDouble4d unsqueeze(int dim) {
+    /**
+     * <pre>
+     * Removes a dimension of size 1 or 0 from an array.
+     *
+     * Eg. (1,3) unsqueeze(0) = (3)
+     * @param dim
+     * @return
+     * </pre>
+     */
+    public Tensor4d unsqueeze(int dim) {
         double[][][][] newData;
         if (dim == 0) {
             newData = new double[data.length][data[0].length][data[0][0].length][1];
@@ -496,9 +522,18 @@ public class DataDouble3d extends DfData {
             }
         }
 
-        return new DataDouble4d(newData);
+        return new Tensor4d(newData);
     }
 
+    /**
+     * <pre>
+     * Adds a dimension of size 1 to an array.
+     *
+     * Eg. (3) unsqueeze(1) = (3,1)
+     * @param dim
+     * @return
+     * </pre>
+     */
     public DataDouble2d squeeze(int dim) {
         int[] shape = shape();
         if (shape[dim] > 1) {

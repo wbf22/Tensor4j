@@ -1,14 +1,16 @@
 package com.freedommuskrats.brarrays.data;
 
+import com.freedommuskrats.brarrays.junk.old.DataDouble2d;
+import com.freedommuskrats.brarrays.junk.old.DataDouble3d;
 import org.junit.jupiter.api.Test;
 
-import static com.freedommuskrats.brarrays.util.ArrayGen.genArray2d;
-import static com.freedommuskrats.brarrays.util.ArrayGen.genArray3d;
+import static com.freedommuskrats.brarrays.junk.old.ArrayGen.genArray2d;
+import static com.freedommuskrats.brarrays.junk.old.ArrayGen.genArray3d;
+import static com.freedommuskrats.brarrays.junk.old.PrimitiveConversion.toPrimitive;
 import static com.freedommuskrats.brarrays.util.GeneralUtil.println;
-import static com.freedommuskrats.brarrays.util.PrimitiveConversion.toPrimitive;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DataDouble3dTest {
+public class Tensor3dTest {
 
 
     @Test
@@ -129,11 +131,11 @@ public class DataDouble3dTest {
 
     @Test
     void reshape() {
-//        DataDouble3d d = new DataDouble3d(1,2,3);
-//        DataDouble3d d = new DataDouble3d(1,3,2);
-//        DataDouble3d d = new DataDouble3d(2,1,3);
-//        DataDouble3d d = new DataDouble3d(2,3,1);
-//        DataDouble3d d = new DataDouble3d(3,1,2);
+//        Tensor3d d = new Tensor3d(1,2,3);
+//        Tensor3d d = new Tensor3d(1,3,2);
+//        Tensor3d d = new Tensor3d(2,1,3);
+//        Tensor3d d = new Tensor3d(2,3,1);
+//        Tensor3d d = new Tensor3d(3,1,2);
         DataDouble3d d = new DataDouble3d(3,2,1);
 
         println(d);

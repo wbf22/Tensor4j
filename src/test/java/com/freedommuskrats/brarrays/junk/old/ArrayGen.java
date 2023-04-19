@@ -1,4 +1,4 @@
-package com.freedommuskrats.brarrays.util;
+package com.freedommuskrats.brarrays.junk.old;
 
 import java.util.Random;
 

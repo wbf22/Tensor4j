@@ -1,18 +1,14 @@
 package com.freedommuskrats.brarrays.data;
 
-import com.freedommuskrats.brarrays.data.DataDouble2d;
-import com.freedommuskrats.brarrays.data.DataDouble3d;
+import com.freedommuskrats.brarrays.junk.old.DataDouble2d;
+import com.freedommuskrats.brarrays.junk.old.DataDouble3d;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-import com.freedommuskrats.brarrays.df;
-
-import static com.freedommuskrats.brarrays.data.DataDouble3d.matmul;
-import static com.freedommuskrats.brarrays.util.ArrayGen.*;
-import static com.freedommuskrats.brarrays.util.ArrayGen.genArray4d;
+import static com.freedommuskrats.brarrays.junk.old.ArrayGen.genArray3d;
+import static com.freedommuskrats.brarrays.junk.old.PrimitiveConversion.toPrimitive;
 import static com.freedommuskrats.brarrays.util.GeneralUtil.println;
-import static com.freedommuskrats.brarrays.util.PrimitiveConversion.toPrimitive;
 
 class dfTest {
 
@@ -23,7 +19,7 @@ class dfTest {
         println("****");
         println(a);
 
-        DataDouble4d b = a.unsqueeze(3);
+        Tensor4d b = a.unsqueeze(3);
         println("****");
         println(b);
 

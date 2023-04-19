@@ -1,9 +1,8 @@
-package com.freedommuskrats.brarrays.data;
+package com.freedommuskrats.brarrays.junk.old;
 
-import com.freedommuskrats.brarrays.df;
+import com.freedommuskrats.brarrays.data.DfData;
 import com.freedommuskrats.brarrays.exception.DataException;
 
-import static com.freedommuskrats.brarrays.util.DimUtil.verifyDimensions;
 import static com.freedommuskrats.brarrays.util.GeneralUtil.roundPrint;
 
 public class DataDouble1d extends DfData {
@@ -41,13 +40,6 @@ public class DataDouble1d extends DfData {
         return new DataDouble1d(new double[]{data[xl]});
     }
 
-    public df unsqueeze(int dim) {
-        return new df(null);
-    }
-
-    public df squeeze() {
-        return new df(null);
-    }
 
 
     @Override

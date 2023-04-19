@@ -1,10 +1,11 @@
 package com.freedommuskrats.brarrays.util;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestClassOrder;
 
-import static com.freedommuskrats.brarrays.util.DDClassGenerator.*;
+import static com.freedommuskrats.brarrays.util.DDClassGenerator.genVerifyDimsMethod;
 
+@Disabled
 public class AssortedGenerators {
 
 
