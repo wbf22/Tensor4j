@@ -3,7 +3,7 @@ Welcome to the Tensor4j wiki!
 
 This library is meant to provide a similar function to numpy in python, howbeit a little simpler and smaller. 
 
-If you're looking for a lightweight java library for doing multidimensional math, this library if for you!
+If you're looking for a lightweight java library for doing multidimensional math, this library is for you!
 
 
 # Getting Started
