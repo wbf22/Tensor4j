@@ -1,14 +1,14 @@
-package com.freedommuskrats.brarrays.data;
+package com.freedommuskrats.tensor4j.data;
 
-import com.freedommuskrats.brarrays.exception.DataException;
+import com.freedommuskrats.tensor4j.exception.DataException;
 
 import java.util.Random;
 import java.util.Arrays;
 
-import static com.freedommuskrats.brarrays.data.Tensor2d.MUL_TILE_SIZE;
-import static com.freedommuskrats.brarrays.data.Range.range;
-import static com.freedommuskrats.brarrays.util.GeneralUtil.roundPrint;
-import static com.freedommuskrats.brarrays.util.GeneralUtil.newLine;
+import static com.freedommuskrats.tensor4j.Tensor2d.MUL_TILE_SIZE;
+import static com.freedommuskrats.tensor4j.util.Range.range;
+import static com.freedommuskrats.tensor4j.util.GeneralUtil.roundPrint;
+import static com.freedommuskrats.tensor4j.util.GeneralUtil.newLine;
 
 <classDoc>
 public class Tensor<num>d extends DfData {
