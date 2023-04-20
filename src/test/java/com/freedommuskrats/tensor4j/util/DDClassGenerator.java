@@ -809,7 +809,7 @@ public class DDClassGenerator {
 
         method += indent(2) + "double" + times(dim-1, "[]") + " newData = new double";
         for (int i = dim-1; i > 0; i--) {
-            method += "[newShape[" + i + "]]";
+            method += "[newShape[" + (i-1) + "]]";
         }
         method += ";" + newLine();
 

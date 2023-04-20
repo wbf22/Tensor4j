@@ -56,7 +56,7 @@ import static com.freedommuskrats.tensor4j.util.GeneralUtil.newLine;
  * See individual methods for details.
  *
  *
- * Translations from common methods from other libraries:
+ * Translations for common methods from other libraries:
  * - cat, use append
  * - vstack, use append
  * - transpose, use reshape
@@ -1455,7 +1455,7 @@ public class Tensor13d extends DfData {
                 newIndex++;
             }
         }
-        double[][][][][][][][][][][][] newData = new double[newShape[12]][newShape[11]][newShape[10]][newShape[9]][newShape[8]][newShape[7]][newShape[6]][newShape[5]][newShape[4]][newShape[3]][newShape[2]][newShape[1]];
+        double[][][][][][][][][][][][] newData = new double[newShape[11]][newShape[10]][newShape[9]][newShape[8]][newShape[7]][newShape[6]][newShape[5]][newShape[4]][newShape[3]][newShape[2]][newShape[1]][newShape[0]];
         for (int x1 = 0; x1 < newData[0][0][0][0][0][0][0][0][0][0][0].length; x1++) {
             for (int x2 = 0; x2 < newData[0][0][0][0][0][0][0][0][0][0].length; x2++) {
                 for (int x3 = 0; x3 < newData[0][0][0][0][0][0][0][0][0].length; x3++) {

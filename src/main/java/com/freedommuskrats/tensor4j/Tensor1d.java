@@ -52,7 +52,7 @@ import static com.freedommuskrats.tensor4j.util.Range.range;
  * See individual methods for details.
  *
  *
- * Translations from common methods from other libraries:
+ * Translations for common methods from other libraries:
  * - cat, use append
  * - vstack, use append
  * - transpose, use reshape

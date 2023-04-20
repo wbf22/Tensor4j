@@ -55,7 +55,7 @@ import static com.freedommuskrats.tensor4j.util.GeneralUtil.roundPrint;
  * See individual methods for details.
  *
  *
- * Translations from common methods from other libraries:
+ * Translations for common methods from other libraries:
  * - cat, use append
  * - vstack, use append
  * - transpose, use reshape
@@ -594,7 +594,7 @@ public class Tensor3d extends DfData {
                 newIndex++;
             }
         }
-        double[][] newData = new double[newShape[2]][newShape[1]];
+        double[][] newData = new double[newShape[1]][newShape[0]];
         for (int x1 = 0; x1 < newData[0].length; x1++) {
             for (int x2 = 0; x2 < newData.length; x2++) {
                 if (dim == 0) {

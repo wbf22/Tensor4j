@@ -1,5 +1,7 @@
 package com.freedommuskrats.tensor4j.data;
 
+import com.freedommuskrats.tensor4j.Tensor2d;
+import com.freedommuskrats.tensor4j.Tensor3d;
 import com.freedommuskrats.tensor4j.Tensor4d;
 import com.freedommuskrats.tensor4j.junk.old.DataDouble2d;
 import com.freedommuskrats.tensor4j.junk.old.DataDouble3d;
@@ -7,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
+import static com.freedommuskrats.tensor4j.Tensor3d.matmul;
 import static com.freedommuskrats.tensor4j.junk.old.ArrayGen.genArray3d;
 import static com.freedommuskrats.tensor4j.junk.old.PrimitiveConversion.toPrimitive;
 import static com.freedommuskrats.tensor4j.util.GeneralUtil.println;
@@ -15,7 +18,22 @@ class dfTest {
 
     @Test
     void testStuff() {
-        DataDouble3d a = new DataDouble3d(2, 2, 2);
+        Tensor3d a = new Tensor3d(3, 1, 2, .5);
+        Tensor3d b = new Tensor3d(2, 3, 2, 2.0);
+        a.set(0,0,0,4.0);
+
+        println(a);
+        println(b);
+
+        println(matmul(a,b));
+
+
+
+    }
+
+    @Test
+    void squeezeUnsqueeze() {
+        Tensor3d a = new Tensor3d(3, 2, 1);
 
         println("****");
         println(a);
@@ -24,14 +42,13 @@ class dfTest {
         println("****");
         println(b);
 
-        a = new DataDouble3d(2, 2, 1);
+        a = new Tensor3d(2, 2, 1);
         println("****");
         println(a);
 
-        DataDouble2d c = a.squeeze(2);
+        Tensor2d c = a.squeeze(2);
         println("****");
         println(c);
-
     }
 
     @Test

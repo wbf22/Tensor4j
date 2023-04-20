@@ -9,6 +9,7 @@ public class GeneralUtil {
     }
 
     public static String roundPrint(double value, int precision) {
+        //TODO handle errors from larger values
         String str = String.valueOf(round(value, precision));
         while(str.split("\\.")[1].length() < precision) {
             str += "0";
@@ -29,10 +30,18 @@ public class GeneralUtil {
         return "\n";
     }
 
+    /**
+     * Handy print function to hide java's crazy print function
+     * @param str
+     */
     public static void println(Object str) {
         System.out.println(str);
     }
 
+    /**
+     * Handy print function to hide java's crazy print function
+     * @param str
+     */
     public static void print(Object str) {
         System.out.print(str);
     }

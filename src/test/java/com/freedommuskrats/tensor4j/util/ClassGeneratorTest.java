@@ -25,7 +25,7 @@ class ClassGeneratorTest {
         for (int dim = 4; dim <= 16; dim++) {
             DDClassGenerator.generate(
                     dim,
-                    "src/main/java/com/freedommuskrats/brarrays/data/Tensor" + dim + "d.java"
+                    "src/main/java/com/freedommuskrats/tensor4j/Tensor" + dim + "d.java"
             );
         }
     }

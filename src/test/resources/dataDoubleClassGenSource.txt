@@ -1,6 +1,8 @@
-package com.freedommuskrats.tensor4j.data;
+package com.freedommuskrats.tensor4j;
 
+import com.freedommuskrats.tensor4j.data.DfData;
 import com.freedommuskrats.tensor4j.exception.DataException;
+import com.freedommuskrats.tensor4j.util.Range;
 
 import java.util.Random;
 import java.util.Arrays;
