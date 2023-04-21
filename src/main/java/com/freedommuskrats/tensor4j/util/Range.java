@@ -27,7 +27,7 @@ public class Range {
     }
 
     /**
-     * Creates a range sequence from 0 to stop.
+     * Creates a range sequence from 0 to stop not inclusive.
      * Stop can be negative.
      * @param stop
      * @return
@@ -37,7 +37,7 @@ public class Range {
     }
 
     /**
-     * Creates a range sequence from start to stop.
+     * Creates a range sequence from start to stop not inclusive.
      * Start can be greater than Stop
      * @param stop
      * @return
@@ -47,7 +47,7 @@ public class Range {
     }
 
     /**
-     * Creates a range sequence from start to stop with given step.
+     * Creates a range sequence from start to stop not inclusive, with given step.
      * Start can be greater than Stop, and step can be negative.
      * If step is 0 an empty array is returned.
      * @param stop

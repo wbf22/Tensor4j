@@ -9,23 +9,26 @@ import java.io.IOException;
 @Disabled
 class ClassGeneratorTest {
 
+    public static final String path = "src/main/java/com/freedommuskrats/tensor4j/data/Tensor";
+    public static final String overidePath = "src/main/java/com/freedommuskrats/tensor4j/Tensor";
 
     @Test
     void gen() throws IOException {
-//        int dim = 3;
-//        DDClassGenerator.generate(
-//                dim,
-//                "src/main/java/com/freedommuskrats/brarrays/data/Tensor" + dim + "d.java"
-//        );
+        int dim = 4;
+        DDClassGenerator.generate(
+                dim,
+                path + dim + "d.java"
+        );
     }
 
     @Test
     void gen4_16() throws IOException {
         System.out.println("****************DFk;asdlkfja;lsdkj********************");
-        for (int dim = 4; dim <= 16; dim++) {
+        for (int dim = 1; dim <= 16; dim++) {
+            String p = (dim > 3)? overidePath : path;
             DDClassGenerator.generate(
                     dim,
-                    "src/main/java/com/freedommuskrats/tensor4j/Tensor" + dim + "d.java"
+                    p + dim + "d.java"
             );
         }
     }

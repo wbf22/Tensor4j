@@ -7,8 +7,8 @@ import com.freedommuskrats.tensor4j.util.Range;
 import java.util.Arrays;
 import java.util.Random;
 
+import static com.freedommuskrats.tensor4j.util.GeneralUtil.*;
 import static com.freedommuskrats.tensor4j.util.Range.range;
-import static com.freedommuskrats.tensor4j.util.GeneralUtil.roundPrint;
 
 /**
  * <pre>
@@ -63,7 +63,7 @@ import static com.freedommuskrats.tensor4j.util.GeneralUtil.roundPrint;
  */
 public class Tensor2d extends DfData {
 
-    public static final int MUL_TILE_SIZE = 2; // 32 seemed to be the best. 16 - 128 were optimal testing on MacBook pro 2021.
+    public static final int MUL_TILE_SIZE = 32; // 32 seemed to be the best. 16 - 128 were optimal testing on MacBook pro 2021.
 
 
     private double[][] data;
@@ -310,20 +310,21 @@ public class Tensor2d extends DfData {
     
 
     /**
-     * Multiplies all values of an array by a scalar value.
-     * @param array
+     * Multiplies all values of a tensor by a scalar value.
+     * @param tensor
      * @param scalar
      * @return
      */
-    public static Tensor2d multiply(Tensor2d array, double scalar) {
-        double[][] data = array.getData();
+    public static Tensor2d multiply(Tensor2d tensor, double scalar) {
+        double[][] data = tensor.getData();
+        double[][] newData = new double[data.length][data[0].length];
 
         for (int x2 = 0; x2 < data.length; x2++) {
             for (int x1 = 0; x1 < data[0].length; x1++) {
-                data[x2][x1] *= scalar;
+                newData[x2][x1] = data[x2][x1] * scalar;
             }
         }
-        return new Tensor2d(data);
+        return new Tensor2d(newData);
     }
 
 
@@ -647,6 +648,47 @@ public class Tensor2d extends DfData {
     }
 
 
+
+    /**
+     * Returns the max value of the tensor/array. Simple algorithm currently
+     * which may be upgraded.
+     * @return
+     */
+    public double max() {
+        double max = Double.MIN_VALUE;
+        for (int x1 = 0; x1 < data[0].length; x1++) {
+            for (int x2 = 0; x2 < data.length; x2++) {
+                double val = data[x2][x1];
+                if (val > max) {
+                    max = val;
+                }
+            }
+        }
+
+        return max;
+    }
+
+
+    /**
+     * Returns the min value of the tensor/array. Simple algorithm currently
+     * which may be upgraded.
+     * @return
+     */
+    public double min() {
+        double min = Double.MAX_VALUE;
+        for (int x1 = 0; x1 < data[0].length; x1++) {
+            for (int x2 = 0; x2 < data.length; x2++) {
+                double val = data[2][1];
+                if (val < min) {
+                    min = val;
+                }
+            }
+        }
+
+        return min;
+    }
+
+
     /**
      * <pre>
      * Useful toString method. Displayed with first two dimensions (x and y)
@@ -661,17 +703,20 @@ public class Tensor2d extends DfData {
      */
     @Override
     public String toString() {
-        
+
+        int spacing = getNeededSpacing(max(), 4);
+
         StringBuilder sb = new StringBuilder();
         for (int x2 = 0; x2 < data.length; x2++) {
             sb.append("[");
             for (int x1 = 0; x1 < data[0].length; x1++) {
-                sb.append(roundPrint(data[x2][x1], 4));
+                sb.append(roundPrint(data[x2][x1], 4, spacing));
                 if (x1 < data[0].length - 1) {
                     sb.append(", ");
                 }
             }
             sb.append("]");
+            sb.append(newLine());
         }
         return sb.toString();
     }

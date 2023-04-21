@@ -7,10 +7,9 @@ import com.freedommuskrats.tensor4j.util.Range;
 import java.util.Random;
 import java.util.Arrays;
 
+import static com.freedommuskrats.tensor4j.util.GeneralUtil.*;
 import static com.freedommuskrats.tensor4j.Tensor2d.MUL_TILE_SIZE;
 import static com.freedommuskrats.tensor4j.util.Range.range;
-import static com.freedommuskrats.tensor4j.util.GeneralUtil.roundPrint;
-import static com.freedommuskrats.tensor4j.util.GeneralUtil.newLine;
 
 
 /**
@@ -64,6 +63,7 @@ import static com.freedommuskrats.tensor4j.util.GeneralUtil.newLine;
  *
  * </pre>
  */
+
 public class Tensor14d extends DfData {
     private double[][][][][][][][][][][][][][] data;
     private int dims;
@@ -957,13 +957,14 @@ public class Tensor14d extends DfData {
     
 
     /**
-     * Multiplies all values of an array by a scalar value.
-     * @param array
+     * Multiplies all values of a tensor by a scalar value.
+     * @param tensor
      * @param scalar
      * @return
      */
-    public static Tensor14d multiply(Tensor14d array, double scalar) {
-        double[][][][][][][][][][][][][][] data = array.getData();
+    public static Tensor14d multiply(Tensor14d tensor, double scalar) {
+        double[][][][][][][][][][][][][][] data = tensor.getData();
+        double[][][][][][][][][][][][][][] newData = new double[data.length][data[0].length][data[0][0].length][data[0][0][0].length][data[0][0][0][0].length][data[0][0][0][0][0].length][data[0][0][0][0][0][0].length][data[0][0][0][0][0][0][0].length][data[0][0][0][0][0][0][0][0].length][data[0][0][0][0][0][0][0][0][0].length][data[0][0][0][0][0][0][0][0][0][0].length][data[0][0][0][0][0][0][0][0][0][0][0].length][data[0][0][0][0][0][0][0][0][0][0][0][0].length][data[0][0][0][0][0][0][0][0][0][0][0][0][0].length];
 
         for (int x14 = 0; x14 < data.length; x14++) {
             for (int x13 = 0; x13 < data[0].length; x13++) {
@@ -979,7 +980,7 @@ public class Tensor14d extends DfData {
                                                     for (int x3 = 0; x3 < data[0][0][0][0][0][0][0][0][0][0][0].length; x3++) {
                                                         for (int x2 = 0; x2 < data[0][0][0][0][0][0][0][0][0][0][0][0].length; x2++) {
                                                             for (int x1 = 0; x1 < data[0][0][0][0][0][0][0][0][0][0][0][0][0].length; x1++) {
-                                                                data[x14][x13][x12][x11][x10][x9][x8][x7][x6][x5][x4][x3][x2][x1] *= scalar;
+                                                                newData[x14][x13][x12][x11][x10][x9][x8][x7][x6][x5][x4][x3][x2][x1] = data[x14][x13][x12][x11][x10][x9][x8][x7][x6][x5][x4][x3][x2][x1] * scalar;
                                                             }
                                                         }
                                                     }
@@ -994,7 +995,7 @@ public class Tensor14d extends DfData {
                 }
             }
         }
-        return new Tensor14d(data);
+        return new Tensor14d(newData);
     }
 
 
@@ -1637,6 +1638,96 @@ public class Tensor14d extends DfData {
     }
 
 
+    
+
+    /**
+     * Returns the max value of the tensor/array. Simple algorithm currently
+     * which may be upgraded.
+     * @return
+     */
+    public double max() {
+        double max = Double.MIN_VALUE;
+        for (int x1 = 0; x1 < data[0][0][0][0][0][0][0][0][0][0][0][0][0].length; x1++) {
+            for (int x2 = 0; x2 < data[0][0][0][0][0][0][0][0][0][0][0][0].length; x2++) {
+                for (int x3 = 0; x3 < data[0][0][0][0][0][0][0][0][0][0][0].length; x3++) {
+                    for (int x4 = 0; x4 < data[0][0][0][0][0][0][0][0][0][0].length; x4++) {
+                        for (int x5 = 0; x5 < data[0][0][0][0][0][0][0][0][0].length; x5++) {
+                            for (int x6 = 0; x6 < data[0][0][0][0][0][0][0][0].length; x6++) {
+                                for (int x7 = 0; x7 < data[0][0][0][0][0][0][0].length; x7++) {
+                                    for (int x8 = 0; x8 < data[0][0][0][0][0][0].length; x8++) {
+                                        for (int x9 = 0; x9 < data[0][0][0][0][0].length; x9++) {
+                                            for (int x10 = 0; x10 < data[0][0][0][0].length; x10++) {
+                                                for (int x11 = 0; x11 < data[0][0][0].length; x11++) {
+                                                    for (int x12 = 0; x12 < data[0][0].length; x12++) {
+                                                        for (int x13 = 0; x13 < data[0].length; x13++) {
+                                                            for (int x14 = 0; x14 < data.length; x14++) {
+                                                                double val = data[x14][x13][x12][x11][x10][x9][x8][x7][x6][x5][x4][x3][x2][x1];
+                                                                if (val > max) {
+                                                                    max = val;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return max;
+    }
+
+
+    /**
+     * Returns the min value of the tensor/array. Simple algorithm currently
+     * which may be upgraded.
+     * @return
+     */
+    public double min() {
+        double min = Double.MAX_VALUE;
+        for (int x1 = 0; x1 < data[0][0][0][0][0][0][0][0][0][0][0][0][0].length; x1++) {
+            for (int x2 = 0; x2 < data[0][0][0][0][0][0][0][0][0][0][0][0].length; x2++) {
+                for (int x3 = 0; x3 < data[0][0][0][0][0][0][0][0][0][0][0].length; x3++) {
+                    for (int x4 = 0; x4 < data[0][0][0][0][0][0][0][0][0][0].length; x4++) {
+                        for (int x5 = 0; x5 < data[0][0][0][0][0][0][0][0][0].length; x5++) {
+                            for (int x6 = 0; x6 < data[0][0][0][0][0][0][0][0].length; x6++) {
+                                for (int x7 = 0; x7 < data[0][0][0][0][0][0][0].length; x7++) {
+                                    for (int x8 = 0; x8 < data[0][0][0][0][0][0].length; x8++) {
+                                        for (int x9 = 0; x9 < data[0][0][0][0][0].length; x9++) {
+                                            for (int x10 = 0; x10 < data[0][0][0][0].length; x10++) {
+                                                for (int x11 = 0; x11 < data[0][0][0].length; x11++) {
+                                                    for (int x12 = 0; x12 < data[0][0].length; x12++) {
+                                                        for (int x13 = 0; x13 < data[0].length; x13++) {
+                                                            for (int x14 = 0; x14 < data.length; x14++) {
+                                                                double val = data[14][13][12][11][10][9][8][7][6][5][4][3][2][1];
+                                                                if (val < min) {
+                                                                    min = val;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return min;
+    }
+
+
     /**
      * <pre>
      * Useful toString method. Displayed with first two dimensions (x and y)
@@ -1652,6 +1743,8 @@ public class Tensor14d extends DfData {
     @Override
     public String toString() {
         
+        int spacing = getNeededSpacing(max(), 4);
+
         StringBuilder sb = new StringBuilder();
         for (int x14 = 0; x14 < data.length; x14++) {
             sb.append("[");
@@ -1692,7 +1785,7 @@ public class Tensor14d extends DfData {
                                                             sb.append(newLine());
                                                             sb.append("            [");
                                                             for (int x1 = 0; x1 < data[0][0][0][0][0][0][0][0][0][0][0][0][0].length; x1++) {
-                                                                sb.append(roundPrint(data[x14][x13][x12][x11][x10][x9][x8][x7][x6][x5][x4][x3][x2][x1], 4));
+                                                                sb.append(roundPrint(data[x14][x13][x12][x11][x10][x9][x8][x7][x6][x5][x4][x3][x2][x1], 4, spacing));
                                                                 if (x1 < data[0][0][0][0][0][0][0][0][0][0][0][0][0].length - 1) {
                                                                     sb.append(", ");
                                                                 }

@@ -1,7 +1,5 @@
-package com.freedommuskrats.tensor4j.data;
+package com.freedommuskrats.tensor4j;
 
-import com.freedommuskrats.tensor4j.Tensor1d;
-import com.freedommuskrats.tensor4j.Tensor2d;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 

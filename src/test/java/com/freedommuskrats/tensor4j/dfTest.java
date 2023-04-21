@@ -1,10 +1,5 @@
-package com.freedommuskrats.tensor4j.data;
+package com.freedommuskrats.tensor4j;
 
-import com.freedommuskrats.tensor4j.Tensor2d;
-import com.freedommuskrats.tensor4j.Tensor3d;
-import com.freedommuskrats.tensor4j.Tensor4d;
-import com.freedommuskrats.tensor4j.junk.old.DataDouble2d;
-import com.freedommuskrats.tensor4j.junk.old.DataDouble3d;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
@@ -38,9 +33,9 @@ class dfTest {
         println("****");
         println(a);
 
-        Tensor4d b = a.unsqueeze(3);
-        println("****");
-        println(b);
+//        Tensor4d b = a.unsqueeze(3);
+//        println("****");
+//        println(b);
 
         a = new Tensor3d(2, 2, 1);
         println("****");

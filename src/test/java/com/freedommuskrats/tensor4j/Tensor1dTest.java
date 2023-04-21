@@ -1,6 +1,5 @@
-package com.freedommuskrats.tensor4j.data;
+package com.freedommuskrats.tensor4j;
 
-import com.freedommuskrats.tensor4j.Tensor1d;
 import org.junit.jupiter.api.Test;
 
 import static com.freedommuskrats.tensor4j.junk.old.ArrayGen.genArray1d;

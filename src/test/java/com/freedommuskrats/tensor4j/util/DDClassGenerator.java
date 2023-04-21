@@ -16,7 +16,7 @@ public class DDClassGenerator {
     private static List<String> documentation = new ArrayList<>();
 
     public static void generate(int dimension, String savePath) throws IOException {
-        if (dimension < 3) {
+        if (dimension < 1) {
             throw new IllegalArgumentException("Dimension must be greater than 3. We don't want to overwrite the existing classes.");
         }
 
@@ -104,6 +104,10 @@ public class DDClassGenerator {
 
         String squeezeMethod = genSqueeze(dimension);
         classString = classString.replaceAll("<squeezeMethod>", squeezeMethod);
+
+        String maxMin = genMaxMin(dimension);
+        classString = classString.replaceAll("<maxMinMethod>", maxMin);
+
 
         String toStringMethod = genToString(dimension);
         classString = classString.replaceAll("<toString>", toStringMethod);
@@ -513,25 +517,37 @@ public class DDClassGenerator {
 
         multiplyMethod += documentation.get(5);
         multiplyMethod += indent(1) + "public static " + classString + " multiply("
-                + classString + " array, double scalar) {" + newLine(0);
-        multiplyMethod += indent(2) + "double" + times(dim, "[]") + " data = array.getData();" + newLine(0);
+                + classString + " tensor, double scalar) {" + newLine(0);
+        multiplyMethod += indent(2) + "double" + times(dim, "[]") + " data = tensor.getData();" + newLine(0);
+        multiplyMethod += indent(2) + "double" + times(dim, "[]") + " newData = new double";
+
+        String[] pieces = genPieces("data", dim);
+
+        for (int i = 0; i < dim; i++) {
+            multiplyMethod += "[" + pieces[i] + "]";
+        }
+        multiplyMethod += ";" + newLine();
 
         multiplyMethod += newLine(0);
-        String[] pieces = genPieces("data", dim);
         for (int i = dim; i > 0; i--) {
             multiplyMethod += indent(2 + dim - i) + forLine(i, pieces[dim - i]) + newLine(0);
         }
 
-        multiplyMethod += indent(2 + dim) + "data";
+        multiplyMethod += indent(2 + dim) + "newData";
         for (int i = dim; i > 0; i--) {
             multiplyMethod += "[x" + i + "]";
         }
-        multiplyMethod += " *= scalar;" + newLine(0);
+        multiplyMethod += " = data";
+        for (int i = dim; i > 0; i--) {
+            multiplyMethod += "[x" + i + "]";
+        }
+        multiplyMethod += " * scalar;" + newLine();
+
         for(int i = dim - 1; i >= 0; i--) {
             multiplyMethod += indent(2 + i) + "}" + newLine(0);
         }
 
-        multiplyMethod += indent(2) + "return new " + classString + "(data);" + newLine(0);
+        multiplyMethod += indent(2) + "return new " + classString + "(newData);" + newLine(0);
         multiplyMethod += indent(1) + "}" + newLine(0);
 
         return multiplyMethod;
@@ -854,6 +870,65 @@ public class DDClassGenerator {
         return method;
     }
 
+    public static String genMaxMin(int dim) {
+        String method = newLine(0);
+
+        method += documentation.get(12);
+        method += indent(1) + "public double max() {" + newLine(0);
+        method += indent(2) + "double max = Double.MIN_VALUE;" + newLine(0);
+
+        String[] pieces = genPieces("data", dim);
+        for (int i = 1; i <= dim; i++) {
+            method += indent(1 + i) + forLine(i, pieces[dim-i]) + newLine();
+        }
+        method += indent(2 + dim) + "double val = data";
+        for (int i = dim; i > 0; i--) {
+            method += "[x" + i + "]";
+        }
+        method += ";" + newLine() + indent(2 + dim);
+        method += "if (val > max) {" + newLine();
+        method += indent(3 + dim) + "max = val;" + newLine();
+        method += indent(2 + dim) + "}" + newLine();
+
+        for (int i = 0; i < dim; i++) {
+            method += indent(1 + dim - i) + "}" + newLine(0);
+        }
+
+        method += newLine();
+        method += indent(2) + "return max;" + newLine(0);
+
+        method += indent(1) + "}" + newLine(0) + newLine(0);
+
+
+        method += documentation.get(13);
+        method += indent(1) + "public double min() {" + newLine(0);
+        method += indent(2) + "double min = Double.MAX_VALUE;" + newLine(0);
+
+        for (int i = 1; i <= dim; i++) {
+            method += indent(1 + i) + forLine(i, pieces[dim-i]) + newLine();
+        }
+        method += indent(2 + dim) + "double val = data";
+        for (int i = dim; i > 0; i--) {
+            method += "[" + i + "]";
+        }
+        method += ";" + newLine() + indent(2 + dim);
+        method += "if (val < min) {" + newLine();
+        method += indent(3 + dim) + "min = val;" + newLine();
+        method += indent(2 + dim) + "}" + newLine();
+
+        for (int i = 0; i < dim; i++) {
+            method += indent(1 + dim - i) + "}" + newLine(0);
+        }
+
+        method += newLine();
+        method += indent(2) + "return min;" + newLine(0);
+
+        method += indent(1) + "}" + newLine(0);
+
+        return method;
+    }
+
+
     public static String[] genPieces(String arrayName, int dimensions) {
         String[] pieces = new String[dimensions];
         for (int i = 0; i < dimensions; i++) {
@@ -920,7 +995,10 @@ public class DDClassGenerator {
 
     public static String genToString(int dim) {
         String method = newLine(2);
-        method += "StringBuilder sb = new StringBuilder();";
+        method += "int spacing = getNeededSpacing(max(), 4);";
+        method += newLine() + newLine();
+
+        method += indent(2) + "StringBuilder sb = new StringBuilder();";
         method += newLine(0);
 
         String[] iterationPieces = genIterationPieces(dim, dim);
@@ -943,7 +1021,7 @@ public class DDClassGenerator {
                 for (int j = dim; j > 0; j--) {
                     method += "[x" + j + "]";
                 }
-                method += ", 4));";
+                method += ", 4, spacing));";
                 method += newLine(0);
             }
         }

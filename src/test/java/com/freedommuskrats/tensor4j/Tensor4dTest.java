@@ -9,7 +9,7 @@ import static com.freedommuskrats.tensor4j.junk.old.ArrayGen.genArray4d;
 import static com.freedommuskrats.tensor4j.junk.old.PrimitiveConversion.toPrimitive;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class Tensor4dTest {
+class Tensor4dTest {
     @Test
     void append_dim0 () {
         double[][][][] start = toPrimitive(

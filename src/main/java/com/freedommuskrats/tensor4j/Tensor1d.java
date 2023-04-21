@@ -7,6 +7,8 @@ import com.freedommuskrats.tensor4j.util.Range;
 import java.util.Arrays;
 import java.util.Random;
 
+import static com.freedommuskrats.tensor4j.util.GeneralUtil.getNeededSpacing;
+import static com.freedommuskrats.tensor4j.util.GeneralUtil.roundPrint;
 import static com.freedommuskrats.tensor4j.util.Range.range;
 
 /**
@@ -242,18 +244,19 @@ public class Tensor1d extends DfData {
     
 
     /**
-     * Multiplies all values of an array by a scalar value.
-     * @param array
+     * Multiplies all values of a tensor by a scalar value.
+     * @param tensor
      * @param scalar
      * @return
      */
-    public static Tensor1d multiply(Tensor1d array, double scalar) {
-        double[] data = array.getData();
+    public static Tensor1d multiply(Tensor1d tensor, double scalar) {
+        double[] data = tensor.getData();
+        double[] newData = new double[data.length];
 
         for (int x1 = 0; x1 < data.length; x1++) {
-            data[x1] *= scalar;
+            newData[x1] = data[x1] * scalar;
         }
-        return new Tensor1d(data);
+        return new Tensor1d(newData);
     }
 
 
@@ -340,6 +343,44 @@ public class Tensor1d extends DfData {
         return new Tensor2d(newData);
     }
 
+
+
+    /**
+     * Returns the max value of the tensor/array. Simple algorithm currently
+     * which may be upgraded.
+     * @return
+     */
+    public double max() {
+        double max = Double.MIN_VALUE;
+        for (int x1 = 0; x1 < data.length; x1++) {
+            double val = data[x1];
+            if (val > max) {
+                max = val;
+            }
+        }
+
+        return max;
+    }
+
+
+    /**
+     * Returns the min value of the tensor/array. Simple algorithm currently
+     * which may be upgraded.
+     * @return
+     */
+    public double min() {
+        double min = Double.MAX_VALUE;
+        for (int x1 = 0; x1 < data.length; x1++) {
+            double val = data[1];
+            if (val < min) {
+                min = val;
+            }
+        }
+
+        return min;
+    }
+
+
     /**
      * <pre>
      * Useful toString method. Displayed with first two dimensions (x and y)
@@ -354,10 +395,13 @@ public class Tensor1d extends DfData {
      */
     @Override
     public String toString() {
-        
+
+        int spacing = getNeededSpacing(max(), 4);
+
         StringBuilder sb = new StringBuilder();
         for (int x1 = 0; x1 < data.length; x1++) {
             sb.append("[");
+            sb.append(roundPrint(data[x1], 4, spacing));
             if (x1 < data.length - 1) {
                 sb.append(", ");
             }
@@ -365,7 +409,5 @@ public class Tensor1d extends DfData {
         sb.append("]");
         return sb.toString();
     }
-
-
 
 }

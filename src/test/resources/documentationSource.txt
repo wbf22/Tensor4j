@@ -28,8 +28,8 @@
      */
 <break>
     /**
-     * Multiplies all values of an array by a scalar value.
-     * @param array
+     * Multiplies all values of a tensor by a scalar value.
+     * @param tensor
      * @param scalar
      * @return
      */
@@ -160,3 +160,15 @@
  *
  * </pre>
  */
+<break>
+    /**
+     * Returns the max value of the tensor/array. Simple algorithm currently
+     * which may be upgraded.
+     * @return
+     */
+<break>
+    /**
+     * Returns the min value of the tensor/array. Simple algorithm currently
+     * which may be upgraded.
+     * @return
+     */

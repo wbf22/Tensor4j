@@ -2,7 +2,6 @@ package com.freedommuskrats.tensor4j.junk.old;
 
 import com.freedommuskrats.tensor4j.data.DfData;
 import com.freedommuskrats.tensor4j.util.Range;
-import com.freedommuskrats.tensor4j.Tensor4d;
 import com.freedommuskrats.tensor4j.exception.DataException;
 
 import java.util.Arrays;
@@ -475,55 +474,55 @@ public class DataDouble3d extends DfData {
         }
         this.data = newData;
     }
-
-    /**
-     * <pre>
-     * Removes a dimension of size 1 or 0 from an array.
-     *
-     * Eg. (1,3) unsqueeze(0) = (3)
-     * @param dim
-     * @return
-     * </pre>
-     */
-    public Tensor4d unsqueeze(int dim) {
-        double[][][][] newData;
-        if (dim == 0) {
-            newData = new double[data.length][data[0].length][data[0][0].length][1];
-        }
-        else if (dim == 1) {
-            newData = new double[data.length][data[0].length][1][data[0][0].length];
-        }
-        else if (dim == 2) {
-            newData = new double[data.length][1][data[0].length][data[0][0].length];
-        }
-        else if (dim == 3) {
-            newData = new double[1][data.length][data[0].length][data[0][0].length];
-        }
-        else {
-            throw new DataException("Dimension must be between 0 and 3");
-        }
-
-        for (int x1 = 0; x1 < data[0][0].length; x1++) {
-            for (int x2 = 0; x2 < data[0].length; x2++) {
-                for (int x3 = 0; x3 < data.length; x3++) {
-                    if (dim == 0) {
-                        newData[x3][x2][x1][0] = data[x3][x2][x1];
-                    }
-                    else if (dim == 1) {
-                        newData[x3][x2][0][x1] = data[x3][x2][x1];
-                    }
-                    else if (dim == 2) {
-                        newData[x3][0][x2][x1] = data[x3][x2][x1];
-                    }
-                    else if (dim == 3) {
-                        newData[0][x3][x2][x1] = data[x3][x2][x1];
-                    }
-                }
-            }
-        }
-
-        return new Tensor4d(newData);
-    }
+//
+//    /**
+//     * <pre>
+//     * Removes a dimension of size 1 or 0 from an array.
+//     *
+//     * Eg. (1,3) unsqueeze(0) = (3)
+//     * @param dim
+//     * @return
+//     * </pre>
+//     */
+//    public Tensor4d unsqueeze(int dim) {
+//        double[][][][] newData;
+//        if (dim == 0) {
+//            newData = new double[data.length][data[0].length][data[0][0].length][1];
+//        }
+//        else if (dim == 1) {
+//            newData = new double[data.length][data[0].length][1][data[0][0].length];
+//        }
+//        else if (dim == 2) {
+//            newData = new double[data.length][1][data[0].length][data[0][0].length];
+//        }
+//        else if (dim == 3) {
+//            newData = new double[1][data.length][data[0].length][data[0][0].length];
+//        }
+//        else {
+//            throw new DataException("Dimension must be between 0 and 3");
+//        }
+//
+//        for (int x1 = 0; x1 < data[0][0].length; x1++) {
+//            for (int x2 = 0; x2 < data[0].length; x2++) {
+//                for (int x3 = 0; x3 < data.length; x3++) {
+//                    if (dim == 0) {
+//                        newData[x3][x2][x1][0] = data[x3][x2][x1];
+//                    }
+//                    else if (dim == 1) {
+//                        newData[x3][x2][0][x1] = data[x3][x2][x1];
+//                    }
+//                    else if (dim == 2) {
+//                        newData[x3][0][x2][x1] = data[x3][x2][x1];
+//                    }
+//                    else if (dim == 3) {
+//                        newData[0][x3][x2][x1] = data[x3][x2][x1];
+//                    }
+//                }
+//            }
+//        }
+//
+//        return new Tensor4d(newData);
+//    }
 
     /**
      * <pre>

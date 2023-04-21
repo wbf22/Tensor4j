@@ -94,7 +94,7 @@ a.set(0,0,0,4.0);
 Tensor3d c = matmul(a,b);
 ```
 This performs the following operation
-<pre>
+```
  4 .5 .5    x    2  2           10, 10
                  2  2     =      3,  3
                  2  2
@@ -102,7 +102,7 @@ This performs the following operation
 .5 .5 .5         2  2
                  2  2
                  2  2
-</pre>
+```
 This generalizes to higher dimensions.
 
 

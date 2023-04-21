@@ -4,13 +4,13 @@ import com.freedommuskrats.tensor4j.data.DfData;
 import com.freedommuskrats.tensor4j.exception.DataException;
 import com.freedommuskrats.tensor4j.util.Range;
 
-import java.util.Arrays;
 import java.util.Random;
+import java.util.Arrays;
 
-import static com.freedommuskrats.tensor4j.util.Range.range;
+import static com.freedommuskrats.tensor4j.util.GeneralUtil.*;
 import static com.freedommuskrats.tensor4j.Tensor2d.MUL_TILE_SIZE;
-import static com.freedommuskrats.tensor4j.util.GeneralUtil.newLine;
-import static com.freedommuskrats.tensor4j.util.GeneralUtil.roundPrint;
+import static com.freedommuskrats.tensor4j.util.Range.range;
+
 
 /**
  * <pre>
@@ -340,22 +340,23 @@ public class Tensor3d extends DfData {
     
 
     /**
-     * Multiplies all values of an array by a scalar value.
-     * @param array
+     * Multiplies all values of a tensor by a scalar value.
+     * @param tensor
      * @param scalar
      * @return
      */
-    public static Tensor3d multiply(Tensor3d array, double scalar) {
-        double[][][] data = array.getData();
+    public static Tensor3d multiply(Tensor3d tensor, double scalar) {
+        double[][][] data = tensor.getData();
+        double[][][] newData = new double[data.length][data[0].length][data[0][0].length];
 
         for (int x3 = 0; x3 < data.length; x3++) {
             for (int x2 = 0; x2 < data[0].length; x2++) {
                 for (int x1 = 0; x1 < data[0][0].length; x1++) {
-                    data[x3][x2][x1] *= scalar;
+                    newData[x3][x2][x1] = data[x3][x2][x1] * scalar;
                 }
             }
         }
-        return new Tensor3d(data);
+        return new Tensor3d(newData);
     }
 
 
@@ -517,7 +518,7 @@ public class Tensor3d extends DfData {
     }
 
 
-    
+
 
      /**
       * <pre>
@@ -614,6 +615,50 @@ public class Tensor3d extends DfData {
 
 
     /**
+     * Returns the max value of the tensor/array. Simple algorithm currently
+     * which may be upgraded.
+     * @return
+     */
+    public double max() {
+        double max = Double.MIN_VALUE;
+        for (int x1 = 0; x1 < data[0][0].length; x1++) {
+            for (int x2 = 0; x2 < data[0].length; x2++) {
+                for (int x3 = 0; x3 < data.length; x3++) {
+                    double val = data[x3][x2][x1];
+                    if (val > max) {
+                        max = val;
+                    }
+                }
+            }
+        }
+
+        return max;
+    }
+
+
+    /**
+     * Returns the min value of the tensor/array. Simple algorithm currently
+     * which may be upgraded.
+     * @return
+     */
+    public double min() {
+        double min = Double.MAX_VALUE;
+        for (int x1 = 0; x1 < data[0][0].length; x1++) {
+            for (int x2 = 0; x2 < data[0].length; x2++) {
+                for (int x3 = 0; x3 < data.length; x3++) {
+                    double val = data[3][2][1];
+                    if (val < min) {
+                        min = val;
+                    }
+                }
+            }
+        }
+
+        return min;
+    }
+
+
+    /**
      * <pre>
      * Useful toString method. Displayed with first two dimensions (x and y)
      * as width and height respectively. Other dimensions are displayed in a
@@ -627,7 +672,9 @@ public class Tensor3d extends DfData {
      */
     @Override
     public String toString() {
-        
+
+        int spacing = getNeededSpacing(max(), 4);
+
         StringBuilder sb = new StringBuilder();
         for (int x3 = 0; x3 < data.length; x3++) {
             sb.append("[");
@@ -635,7 +682,7 @@ public class Tensor3d extends DfData {
                 sb.append(newLine());
                 sb.append(" [");
                 for (int x1 = 0; x1 < data[0][0].length; x1++) {
-                    sb.append(roundPrint(data[x3][x2][x1], 4));
+                    sb.append(roundPrint(data[x3][x2][x1], 4, spacing));
                     if (x1 < data[0][0].length - 1) {
                         sb.append(", ");
                     }
@@ -648,6 +695,7 @@ public class Tensor3d extends DfData {
         }
         return sb.toString();
     }
+
 
 
 
