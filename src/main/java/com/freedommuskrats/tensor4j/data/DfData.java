@@ -18,6 +18,14 @@ public abstract class DfData {
         int[] thisShape = toMul.shape();
         int[] mulShape = mul.shape();
 
+        if (mulShape.length == 1) {
+            if (thisShape.length != mulShape.length) {
+                throw new DataException("Can't dot a tensor of length " + mulShape.length + " by a tensor of " + thisShape.length
+                        + ". They must have the same length");
+            }
+            return;
+        }
+
         if (thisShape.length > mulShape.length) {
             throw new DataException("Can't multiply a " + mulShape.length + "d matrix by a " + thisShape.length + "d matrix."
                     + " They must have the same dimensionality or the second must have more dimensions than the first");
