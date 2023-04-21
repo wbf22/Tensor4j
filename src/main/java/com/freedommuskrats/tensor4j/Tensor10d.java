@@ -4,11 +4,11 @@ import com.freedommuskrats.tensor4j.data.DfData;
 import com.freedommuskrats.tensor4j.exception.DataException;
 import com.freedommuskrats.tensor4j.util.Range;
 
-import java.util.Random;
 import java.util.Arrays;
+import java.util.Random;
 
-import static com.freedommuskrats.tensor4j.util.GeneralUtil.*;
 import static com.freedommuskrats.tensor4j.Tensor2d.MUL_TILE_SIZE;
+import static com.freedommuskrats.tensor4j.util.GeneralUtil.*;
 import static com.freedommuskrats.tensor4j.util.Range.range;
 
 

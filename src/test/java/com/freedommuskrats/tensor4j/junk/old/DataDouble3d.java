@@ -1,15 +1,15 @@
 package com.freedommuskrats.tensor4j.junk.old;
 
 import com.freedommuskrats.tensor4j.data.DfData;
-import com.freedommuskrats.tensor4j.util.Range;
 import com.freedommuskrats.tensor4j.exception.DataException;
+import com.freedommuskrats.tensor4j.util.Range;
 
 import java.util.Arrays;
 import java.util.Random;
 
-import static com.freedommuskrats.tensor4j.util.Range.range;
 import static com.freedommuskrats.tensor4j.util.GeneralUtil.newLine;
 import static com.freedommuskrats.tensor4j.util.GeneralUtil.roundPrint;
+import static com.freedommuskrats.tensor4j.util.Range.range;
 
 public class DataDouble3d extends DfData {
     private double[][][] data;

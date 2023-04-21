@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import static com.freedommuskrats.tensor4j.junk.old.ArrayGen.genArray2d;
 import static com.freedommuskrats.tensor4j.junk.old.ArrayGen.genArray3d;
 import static com.freedommuskrats.tensor4j.junk.old.PrimitiveConversion.toPrimitive;
-import static com.freedommuskrats.tensor4j.util.GeneralUtil.println;
 import static com.freedommuskrats.tensor4j.util.Range.range;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
