@@ -5,6 +5,24 @@ This library is meant to provide a similar function to numpy in python, howbeit 
 
 If you're looking for a lightweight java library for doing multidimensional math, this library is for you!
 
+# Table of Contents
+- [Getting Started](#Getting-Started)
+- [Creating a tensor](#creating-a-tensor)
+- [Multiplication and Dot](#multiplication-and-dot)
+  - [Dot](#dot)
+  - [Multiplication](#multiplication)
+  - [Scalars](#scalar-multiplication)
+- [Accessors](#accessors)
+  - [get](#get)
+  - [set](#set)
+  - [slice](#slice)
+- [Modifiers](#modifiers)
+  - [shape](#shape)
+  - [reshape](#reshape)
+  - [squeeze](#squeeze)
+  - [unsqueeze](#unsqueeze)
+
+
 
 # Getting Started
 Maven dependency:
@@ -37,16 +55,6 @@ Here's a list of provided methods:
  - cat, use append
  - vstack, use append
  - transpose, use reshape
-
-# Table of Contents
-
-- [Creating a tensor](#creating-a-tensor)
-- [Multiplication and Dot](#multiplication-and-Dot)
-    - [Dot](#dot)
-    - [Multiplication](#multiplication)
-- [Section Two](#section-two)
-    - [Subsection Three](#subsection-three)
-    - [Subsection Four](#subsection-four)
 
 
 ## Creating a tensor
@@ -202,7 +210,6 @@ hurt personally)
 This generalizes to higher dimensions. It may be helpful to play with this 
 and use the toString method to understand what's really going on.
 
-
 <br>
 
 #### Under the hood
@@ -210,8 +217,145 @@ Our algorithm uses a tiling approach to reduce the number of cache misses. This 
 but could be faster for those specific cases.
 
 
+### Scalar Multiplication
+Here's how to multiply a tensor by a constant/scalar
+```java
+Tensor2d a = new Tensor2d(3, 2, .5);
+a.set(0, 1, 4.0);
+
+Tensor2d c = multiply(a,5);
+```
+Does the following
+
+```
+ .5 .5 .5   X   5   =   2.5  2.5  2.5
+  4 .5 .5               20   2.5  2.5
+```
+
+This works for all higher dimension tensors as well. 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+# Accessors
+
+## Get
+Use the get method to retrieve elements from the array.
+
+```java
+Tensor2d a = new Tensor2d(3, 2);
+a.get(0, 1);
+```
+is like this
+```
+.6, .5, .3
+.7, .6, .1
+  
+.7
+```
+
+## Set
+Use the set method to set an element of a tensor like so
+```java
+Tensor2d a = new Tensor2d(3, 2);
+a.set(0, 1, 10);
+```
+
+```
+ 1, .2, .7
+.3, .7, .6
+
+ 1, .2, .7
+10, .7, .6
+```
+
+## Slice
+Slice is handy for getting sections of a tensor. These methods all rely on the Range object provided. Here's some examples
+
+#### Tensor1d
+```java
+Tensor1d a = new Tensor1d(10);
+Tensor1d b = a.slice(Range.range(4));
+```
+``` 
+.2, .8, .3, .0, .6, .2, .6, .5, .5, .0
+
+.2, .8, .3, .0
+```
+
+#### Tensor2d
+This example gets indexes 1-5 in the x axis (columns) and then every even index
+from 0-2 (rows)
+```java
+Tensor2d a = new Tensor2d(4, 3, 0);
+a.set(0, 0, 1);
+a.set(1, 0, 2);
+a.set(2, 0, 3);
+a.set(3, 0, 4);
+a.set(0, 2, 5);
+a.set(1, 2, 6);
+a.set(2, 2, 7);
+a.set(3, 2, 8);
+
+Tensor2d b = a.slice(Range.range(0,2), Range.range(0, 3, 2));
+```
+``` 
+1, 2, 3, 4
+0, 0, 0, 0
+5, 6, 7, 8
+
+1, 2
+5, 6
+```
+
+#### Tensor3d
+This time we append a few tensors together to make a 3d tensor
+```java
+Tensor2d a = new Tensor2d(2, 2, 0);
+Tensor2d b = new Tensor2d(2, 2, 1);
+Tensor2d c = new Tensor2d(2, 2, 3);
+Tensor2d d = new Tensor2d(2, 2, 4);
+
+Tensor3d e = a.unsqueeze(2);
+e.append(b);
+e.append(c);
+e.append(d);
+
+Tensor3d f = e.slice(Range.all(), Range.all(), Range.range(1, 4, 2));
+
+```
+Here's the tensor 'e' and the result of the slice
+```
+ 0, 0
+ 0, 0
+
+ 1, 1
+ 1, 1
+
+ 3, 3
+ 3, 3
+
+ 4, 4
+ 4, 4
+
+
+
+ 1, 1
+ 1, 1
+
+ 4, 4
+ 4, 4
+```
 
 
 

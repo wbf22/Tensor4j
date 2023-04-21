@@ -1101,7 +1101,7 @@ public class Tensor8d extends DfData {
     @Override
     public String toString() {
         
-        int spacing = getNeededSpacing(max(), 4);
+        int spacing = getNeededSpacing(max(), PRECISION);
 
         StringBuilder sb = new StringBuilder();
         for (int x8 = 0; x8 < data.length; x8++) {
@@ -1125,7 +1125,7 @@ public class Tensor8d extends DfData {
                                     sb.append(newLine());
                                     sb.append("      [");
                                     for (int x1 = 0; x1 < data[0][0][0][0][0][0][0].length; x1++) {
-                                        sb.append(roundPrint(data[x8][x7][x6][x5][x4][x3][x2][x1], 4, spacing));
+                                        sb.append(roundPrint(data[x8][x7][x6][x5][x4][x3][x2][x1], PRECISION, spacing));
                                         if (x1 < data[0][0][0][0][0][0][0].length - 1) {
                                             sb.append(", ");
                                         }

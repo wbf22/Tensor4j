@@ -1743,7 +1743,7 @@ public class Tensor14d extends DfData {
     @Override
     public String toString() {
         
-        int spacing = getNeededSpacing(max(), 4);
+        int spacing = getNeededSpacing(max(), PRECISION);
 
         StringBuilder sb = new StringBuilder();
         for (int x14 = 0; x14 < data.length; x14++) {
@@ -1785,7 +1785,7 @@ public class Tensor14d extends DfData {
                                                             sb.append(newLine());
                                                             sb.append("            [");
                                                             for (int x1 = 0; x1 < data[0][0][0][0][0][0][0][0][0][0][0][0][0].length; x1++) {
-                                                                sb.append(roundPrint(data[x14][x13][x12][x11][x10][x9][x8][x7][x6][x5][x4][x3][x2][x1], 4, spacing));
+                                                                sb.append(roundPrint(data[x14][x13][x12][x11][x10][x9][x8][x7][x6][x5][x4][x3][x2][x1], PRECISION, spacing));
                                                                 if (x1 < data[0][0][0][0][0][0][0][0][0][0][0][0][0].length - 1) {
                                                                     sb.append(", ");
                                                                 }

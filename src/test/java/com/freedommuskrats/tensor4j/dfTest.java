@@ -1,10 +1,12 @@
 package com.freedommuskrats.tensor4j;
 
+import com.freedommuskrats.tensor4j.util.Range;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
 import static com.freedommuskrats.tensor4j.Tensor1d.dot;
+import static com.freedommuskrats.tensor4j.Tensor2d.multiply;
 import static com.freedommuskrats.tensor4j.Tensor3d.matmul;
 import static com.freedommuskrats.tensor4j.junk.old.ArrayGen.genArray3d;
 import static com.freedommuskrats.tensor4j.junk.old.PrimitiveConversion.toPrimitive;
@@ -14,17 +16,24 @@ class dfTest {
 
     @Test
     void testStuff() {
-        Tensor1d a = new Tensor1d(3, .5);
-        Tensor1d b = new Tensor1d(3, 2.0);
-        a.set(0, 4.0);
+        Tensor2d a = new Tensor2d(2, 2, 0);
+        Tensor2d b = new Tensor2d(2, 2, 1);
+        Tensor2d c = new Tensor2d(2, 2, 3);
+        Tensor2d d = new Tensor2d(2, 2, 4);
+
+        Tensor3d e = a.unsqueeze(2);
+        e.append(b);
+        e.append(c);
+        e.append(d);
+
+        Tensor3d f = e.slice(Range.all(), Range.all(), Range.range(1, 4, 2));
 
         println(a);
         println(b);
-
-        println(dot(a,b));
-
-
-
+        println(c);
+        println(d);
+        println(e);
+        println(f);
     }
 
     @Test

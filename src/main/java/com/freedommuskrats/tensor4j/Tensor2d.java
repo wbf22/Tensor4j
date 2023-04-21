@@ -704,13 +704,13 @@ public class Tensor2d extends DfData {
     @Override
     public String toString() {
 
-        int spacing = getNeededSpacing(max(), 4);
+        int spacing = getNeededSpacing(max(), PRECISION);
 
         StringBuilder sb = new StringBuilder();
         for (int x2 = 0; x2 < data.length; x2++) {
             sb.append("[");
             for (int x1 = 0; x1 < data[0].length; x1++) {
-                sb.append(roundPrint(data[x2][x1], 4, spacing));
+                sb.append(roundPrint(data[x2][x1], PRECISION, spacing));
                 if (x1 < data[0].length - 1) {
                     sb.append(", ");
                 }

@@ -54,7 +54,7 @@ public class Range {
      * @return
      */
     public static Range range (int start, int stop, int step) {
-        int size = (step == 0)? (stop - start) : (stop - start) / step;
+        int size = (step == 0)? (stop - start) : (int) Math.round((stop - start) / (double) step);
         size = (stop < start)? size * -1 : size;
 
         int[] sequence = new int[size];

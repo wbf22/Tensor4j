@@ -995,7 +995,7 @@ public class DDClassGenerator {
 
     public static String genToString(int dim) {
         String method = newLine(2);
-        method += "int spacing = getNeededSpacing(max(), 4);";
+        method += "int spacing = getNeededSpacing(max(), PRECISION);";
         method += newLine() + newLine();
 
         method += indent(2) + "StringBuilder sb = new StringBuilder();";
@@ -1021,7 +1021,7 @@ public class DDClassGenerator {
                 for (int j = dim; j > 0; j--) {
                     method += "[x" + j + "]";
                 }
-                method += ", 4, spacing));";
+                method += ", PRECISION, spacing));";
                 method += newLine(0);
             }
         }

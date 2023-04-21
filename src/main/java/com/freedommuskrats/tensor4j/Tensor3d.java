@@ -673,7 +673,7 @@ public class Tensor3d extends DfData {
     @Override
     public String toString() {
 
-        int spacing = getNeededSpacing(max(), 4);
+        int spacing = getNeededSpacing(max(), PRECISION);
 
         StringBuilder sb = new StringBuilder();
         for (int x3 = 0; x3 < data.length; x3++) {
@@ -682,7 +682,7 @@ public class Tensor3d extends DfData {
                 sb.append(newLine());
                 sb.append(" [");
                 for (int x1 = 0; x1 < data[0][0].length; x1++) {
-                    sb.append(roundPrint(data[x3][x2][x1], 4, spacing));
+                    sb.append(roundPrint(data[x3][x2][x1], PRECISION, spacing));
                     if (x1 < data[0][0].length - 1) {
                         sb.append(", ");
                     }

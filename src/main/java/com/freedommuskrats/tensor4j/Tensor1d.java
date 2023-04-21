@@ -396,12 +396,12 @@ public class Tensor1d extends DfData {
     @Override
     public String toString() {
 
-        int spacing = getNeededSpacing(max(), 4);
+        int spacing = getNeededSpacing(max(), PRECISION);
 
         StringBuilder sb = new StringBuilder();
+        sb.append("[");
         for (int x1 = 0; x1 < data.length; x1++) {
-            sb.append("[");
-            sb.append(roundPrint(data[x1], 4, spacing));
+            sb.append(roundPrint(data[x1], PRECISION, spacing));
             if (x1 < data.length - 1) {
                 sb.append(", ");
             }
