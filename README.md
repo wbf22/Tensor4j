@@ -17,6 +17,7 @@ If you're looking for a lightweight java library for doing multidimensional math
   - [set](#set)
   - [slice](#slice)
 - [Modifiers](#modifiers)
+  - [append](#append)
   - [shape](#shape)
   - [reshape](#reshape)
   - [squeeze](#squeeze)
@@ -258,10 +259,10 @@ a.get(0, 1);
 ```
 is like this
 ```
-.6, .5, .3
-.7, .6, .1
-  
-.7
+[0.6, 0.2, 0.1]
+[0.8, 0.5, 0.9]
+
+0.8
 ```
 
 ## Set
@@ -272,11 +273,11 @@ a.set(0, 1, 10);
 ```
 
 ```
- 1, .2, .7
-.3, .7, .6
+[0.8, 0.1, 0.6]
+[0.4, 0.4, 0.0]
 
- 1, .2, .7
-10, .7, .6
+[ 0.8,  0.1,  0.6]
+[10.0,  0.4,  0.0]
 ```
 
 ## Slice
@@ -288,9 +289,9 @@ Tensor1d a = new Tensor1d(10);
 Tensor1d b = a.slice(Range.range(4));
 ```
 ``` 
-.2, .8, .3, .0, .6, .2, .6, .5, .5, .0
+[0.5, 0.7, 0.4, 1.0, 0.5, 0.7, 0.7, 0.6, 0.2, 0.2]
 
-.2, .8, .3, .0
+[0.5, 0.7, 0.4, 1.0]
 ```
 
 #### Tensor2d
@@ -310,12 +311,12 @@ a.set(3, 2, 8);
 Tensor2d b = a.slice(Range.range(0,2), Range.range(0, 3, 2));
 ```
 ``` 
-1, 2, 3, 4
-0, 0, 0, 0
-5, 6, 7, 8
+[1.0, 2.0, 3.0, 4.0]
+[0.0, 0.0, 0.0, 0.0]
+[5.0, 6.0, 7.0, 8.0]
 
-1, 2
-5, 6
+[1.0, 2.0]
+[5.0, 6.0]
 ```
 
 #### Tensor3d
@@ -336,27 +337,204 @@ Tensor3d f = e.slice(Range.all(), Range.all(), Range.range(1, 4, 2));
 ```
 Here's the tensor 'e' and the result of the slice
 ```
- 0, 0
- 0, 0
+[
+ [0.0, 0.0]
+ [0.0, 0.0]
+]
+[
+ [1.0, 1.0]
+ [1.0, 1.0]
+]
+[
+ [3.0, 3.0]
+ [3.0, 3.0]
+]
+[
+ [4.0, 4.0]
+ [4.0, 4.0]
+]
 
- 1, 1
- 1, 1
 
- 3, 3
- 3, 3
+[
+ [1.0, 1.0]
+ [1.0, 1.0]
+]
+[
+ [4.0, 4.0]
+ [4.0, 4.0]
+]
 
- 4, 4
- 4, 4
-
-
-
- 1, 1
- 1, 1
-
- 4, 4
- 4, 4
 ```
 
+## Modifiers
+
+### Append
+Append allows you to do classic operation like cat, vstack, append etc...
+
+Here's some examples
+
+#### Tensor1d
+```java
+Tensor1d a = new Tensor1d(2, 2);
+Tensor1d b = new Tensor1d(2, 3);
+
+a.append(b);
+```
+``` 
+[2.0, 2.0]
+[3.0, 3.0]
+
+[2.0, 2.0, 3.0, 3.0]
+```
+
+#### Tensor2d
+The second parameters in the append method is the dimension along which to append. A good way to think of it is which dimension do you want to grow.
+All other dimensions must match for the append to succeed. 
+```java
+Tensor2d a = new Tensor2d(2, 2);
+Tensor2d b = new Tensor2d(2, 2);
+
+a.append(b, 0);
+```
+```
+[0.6, 0.7]
+[0.1, 0.3]
+
+[0.8, 0.8]
+[0.3, 0.8]
+
+
+[0.6, 0.7, 0.8, 0.8]
+[0.1, 0.3, 0.3, 0.8]
+```
+Along the second (y) dimension
+```java
+[0.3, 0.4]
+[0.4, 0.3]
+[0.2, 0.6]
+
+[0.8, 0.2]
+
+        
+[0.3, 0.4]
+[0.4, 0.3]
+[0.2, 0.6]
+[0.8, 0.2]
+```
+
+#### Tensor3d
+```java
+Tensor3d a = new Tensor3d(2, 3, 2);
+Tensor3d b = new Tensor3d(1, 3, 2);
+
+a.append(b, 0);
+```
+``` 
+[
+ [0.3, 0.2]
+ [0.9, 0.9]
+ [0.6, 0.4]
+]
+[
+ [0.7, 0.7]
+ [0.8, 0.4]
+ [0.6, 0.2]
+]
+
+[
+ [0.9]
+ [0.5]
+ [0.3]
+]
+[
+ [0.9]
+ [0.6]
+ [0.6]
+]
+
+
+
+[
+ [0.3, 0.2, 0.9]
+ [0.9, 0.9, 0.5]
+ [0.6, 0.4, 0.3]
+]
+[
+ [0.7, 0.7, 0.9]
+ [0.8, 0.4, 0.6]
+ [0.6, 0.2, 0.6]
+]
+```
+Along the 3rd (z) dimension
+```java
+Tensor3d a = new Tensor3d(2, 2, 2);
+Tensor3d b = new Tensor3d(2, 2, 1);
+
+println(a);
+println(b);
+a.append(b, 2);
+```
+``` 
+[
+ [0.2, 0.5]
+ [0.8, 0.2]
+]
+[
+ [0.5, 0.1]
+ [0.7, 0.4]
+]
+
+
+[
+ [0.4, 0.0]
+ [0.4, 1.0]
+]
+
+
+
+[
+ [0.2, 0.5]
+ [0.8, 0.2]
+]
+[
+ [0.5, 0.1]
+ [0.7, 0.4]
+]
+[
+ [0.4, 0.0]
+ [0.4, 1.0]
+]
+```
+
+#### vstack equivalent
+
+This operation is basically making a list of the two 2d tensors. First we unsqueeze 'a' and then use
+append method for a 2d tensor on 'c' which is now 3d. This method only appends on the last dimension 
+as that's the only possibility for a 2d tensor on a 3d tensor.
+```java
+Tensor2d a = new Tensor2d(2, 2, 2);
+Tensor2d b = new Tensor2d(2, 2, 1);
+
+Tensor3d c = a.unsqueeze(2);
+c.append(b);
+```
+```
+[0.7, 0.5]
+[0.3, 0.3]
+
+[0.5, 0.8]
+[0.2, 0.7]
+
+
+[
+ [0.7, 0.5]
+ [0.3, 0.3]
+]
+[
+ [0.5, 0.5]
+ [0.8, 0.8]
+]
+```
 
 
 

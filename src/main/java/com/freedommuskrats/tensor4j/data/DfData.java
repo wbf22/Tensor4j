@@ -7,7 +7,7 @@ import com.freedommuskrats.tensor4j.exception.DataException;
  */
 public abstract class DfData {
 
-    public static int PRECISION = 4;
+    public static int PRECISION = 1;
 
     public abstract int[] shape();
 

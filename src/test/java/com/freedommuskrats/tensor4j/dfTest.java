@@ -16,24 +16,19 @@ class dfTest {
 
     @Test
     void testStuff() {
-        Tensor2d a = new Tensor2d(2, 2, 0);
-        Tensor2d b = new Tensor2d(2, 2, 1);
-        Tensor2d c = new Tensor2d(2, 2, 3);
-        Tensor2d d = new Tensor2d(2, 2, 4);
-
-        Tensor3d e = a.unsqueeze(2);
-        e.append(b);
-        e.append(c);
-        e.append(d);
-
-        Tensor3d f = e.slice(Range.all(), Range.all(), Range.range(1, 4, 2));
+        Tensor2d a = new Tensor2d(2, 2);
+        Tensor2d b = new Tensor2d(2, 2);
+        // TODO bug here
+        // TODO also fix error for append
 
         println(a);
         println(b);
+
+        Tensor3d c = a.unsqueeze(2);
+
+        c.append(b);
+
         println(c);
-        println(d);
-        println(e);
-        println(f);
     }
 
     @Test
