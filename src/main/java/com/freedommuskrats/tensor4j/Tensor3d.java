@@ -327,7 +327,7 @@ public class Tensor3d extends DfData {
                     if (x3 < data.length) {
                         newData[x3][x2][x1] = data[x3][x2][x1];
                     } else {
-                        newData[x3][x2][x1] = ap[x3 - data.length][x2];
+                        newData[x3][x2][x1] = ap[x2][x1];
                     }
                 }
             }
@@ -424,17 +424,17 @@ public class Tensor3d extends DfData {
     private static void verifyDimensions(double[][][] array, int[]expectedDimensions) {
         if (array.length != expectedDimensions[0]) {
             throw new DataException(
-                    String.format("Size of first dimension of array must be %s, but was %s", expectedDimensions[0], array.length)
+                    String.format("Size of dimension 3 of array must be %s, but was %s", expectedDimensions[0], array.length)
             );
         }
         else if (array[0].length != expectedDimensions[1]) {
             throw new DataException(
-                    String.format("Size of second dimension of array must be %s, but was %s", expectedDimensions[1], array[0].length)
+                    String.format("Size of dimension 2 of array must be %s, but was %s", expectedDimensions[1], array[0].length)
             );
         }
         else if (array[0][0].length != expectedDimensions[2]) {
             throw new DataException(
-                    String.format("Size of third dimension of array must be %s, but was %s", expectedDimensions[2], array[0][0].length)
+                    String.format("Size of dimension 1 of array must be %s, but was %s", expectedDimensions[2], array[0][0].length)
             );
         }
     }
@@ -443,12 +443,12 @@ public class Tensor3d extends DfData {
     private static void verifyDimensions(double[][] array, int[]expectedDimensions) {
         if (array.length != expectedDimensions[0]) {
             throw new DataException(
-                    String.format("Size of first dimension of array must be %s, but was %s", expectedDimensions[0], array.length)
+                    String.format("Size of dimension 2 of array must be %s, but was %s", expectedDimensions[0], array.length)
             );
         }
         else if (array[0].length != expectedDimensions[1]) {
             throw new DataException(
-                    String.format("Size of second dimension of array must be %s, but was %s", expectedDimensions[1], array[0].length)
+                    String.format("Size of dimension 1 of array must be %s, but was %s", expectedDimensions[1], array[0].length)
             );
         }
     }

@@ -490,8 +490,7 @@ public class DDClassGenerator {
             appendMethod += "[x" + i + "]";
         }
         appendMethod += " = ap";
-        appendMethod += "[x" + dim + " - data.length]";
-        for (int i = dim - 1; i > 1; i--) {
+        for (int i = dim - 1; i > 0; i--) {
             appendMethod += "[x" + i + "]";
         }
         appendMethod += ";";
@@ -617,34 +616,16 @@ public class DDClassGenerator {
         fileString += " array, int[]expectedDimensions) {";
         fileString += newLine(0);
 
-        fileString +=
-                "        if (array.length != expectedDimensions[0]) {\n" +
-                "            throw new DataException(\n" +
-                "                    String.format(\"Size of first dimension of array must be %s, but was %s\", expectedDimensions[0], array.length)\n" +
-                "            );\n" +
-                "        }\n" +
-                "        else if (array[0].length != expectedDimensions[1]) {\n" +
-                "            throw new DataException(\n" +
-                "                    String.format(\"Size of second dimension of array must be %s, but was %s\", expectedDimensions[1], array[0].length)\n" +
-                "            );\n" +
-                "        }\n" +
-                "        else if (array[0][0].length != expectedDimensions[2]) {\n" +
-                "            throw new DataException(\n" +
-                "                    String.format(\"Size of third dimension of array must be %s, but was %s\", expectedDimensions[2], array[0][0].length)\n" +
-                "            );\n" +
-                "        }";
-        fileString += newLine(0);
-
-        for (int i = 3; i < dim; i++) {
+        for (int i = 0; i < dim; i++) {
             fileString += indent(2);
-            fileString += "else if (array";
+            fileString += (i==0)? "if (array" : "else if (array";
             fileString += times(i, "[0]");
             fileString += ".length != expectedDimensions[";
             fileString += i;
             fileString += "]) {\n" +
                     "            throw new DataException(\n" +
                     "                    String.format(\"";
-            fileString += "Size of dimension " + (i + 1) + " of array must be %s, but was %s\", expectedDimensions[";
+            fileString += "Size of dimension " + (dim - i) + " of array must be %s, but was %s\", expectedDimensions[";
             fileString += i;
             fileString += "], array";
             fileString += times(i, "[0]");

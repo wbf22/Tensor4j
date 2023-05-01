@@ -298,7 +298,7 @@ public class Tensor2d extends DfData {
                 if (x2 < data.length) {
                     newData[x2][x1] = data[x2][x1];
                 } else {
-                    newData[x2][x1] = ap[x2 - data.length];
+                    newData[x2][x1] = ap[x1];
                 }
             }
         }
@@ -491,12 +491,12 @@ public class Tensor2d extends DfData {
     private static void verifyDimensions(double[][] array, int[]expectedDimensions) {
         if (array.length != expectedDimensions[0]) {
             throw new DataException(
-                    String.format("Size of first dimension of array must be %s, but was %s", expectedDimensions[0], array.length)
+                    String.format("Size of dimension 2 of array must be %s, but was %s", expectedDimensions[0], array.length)
             );
         }
         else if (array[0].length != expectedDimensions[1]) {
             throw new DataException(
-                    String.format("Size of second dimension of array must be %s, but was %s", expectedDimensions[1], array[0].length)
+                    String.format("Size of dimension 1 of array must be %s, but was %s", expectedDimensions[1], array[0].length)
             );
         }
     }
@@ -505,7 +505,7 @@ public class Tensor2d extends DfData {
     private static void verifyDimensions(double[] array, int[]expectedDimensions) {
         if (array.length != expectedDimensions[0]) {
             throw new DataException(
-                    String.format("Size of first dimension of array must be %s, but was %s", expectedDimensions[0], array.length)
+                    String.format("Size of dimension 1 of array must be %s, but was %s", expectedDimensions[0], array.length)
             );
         }
     }

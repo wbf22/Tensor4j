@@ -22,6 +22,10 @@ If you're looking for a lightweight java library for doing multidimensional math
   - [reshape](#reshape)
   - [squeeze](#squeeze)
   - [unsqueeze](#unsqueeze)
+- [Equivalents](#equivalents)
+  - [cat](#cat)
+  - [vstack](#vstack)
+  - [transpose](#transpose)
 
 
 
@@ -506,7 +510,11 @@ a.append(b, 2);
 ]
 ```
 
-#### vstack equivalent
+# Equivalents
+
+## cat
+
+## vstack
 
 This operation is basically making a list of the two 2d tensors. First we unsqueeze 'a' and then use
 append method for a 2d tensor on 'c' which is now 3d. This method only appends on the last dimension 
@@ -519,22 +527,25 @@ Tensor3d c = a.unsqueeze(2);
 c.append(b);
 ```
 ```
-[0.7, 0.5]
-[0.3, 0.3]
+[0.8, 0.8]
+[0.6, 0.8]
 
-[0.5, 0.8]
-[0.2, 0.7]
-
+[0.2, 0.4]
+[0.5, 0.3]
 
 [
- [0.7, 0.5]
- [0.3, 0.3]
+ [0.8, 0.8]
+ [0.6, 0.8]
 ]
 [
- [0.5, 0.5]
- [0.8, 0.8]
+ [0.2, 0.4]
+ [0.5, 0.3]
 ]
 ```
+
+## transpose
+
+
 
 
 
