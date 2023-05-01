@@ -78,6 +78,7 @@ public class Tensor2d extends DfData {
      * @param filler The value to fill the array with.
      */
     public Tensor2d(int dim1, int dim2, double filler) {
+        // TODO: throw errors when give size of zero or less
         dims = 2;
         this.data = new double[dim2][dim1];
         for (int x2 = 0; x2 < dim2; x2++) {
@@ -491,12 +492,12 @@ public class Tensor2d extends DfData {
     private static void verifyDimensions(double[][] array, int[]expectedDimensions) {
         if (array.length != expectedDimensions[0]) {
             throw new DataException(
-                    String.format("Size of dimension 2 of array must be %s, but was %s", expectedDimensions[0], array.length)
+                    String.format("Size of dimension 1 of array must be %s, but was %s", expectedDimensions[0], array.length)
             );
         }
         else if (array[0].length != expectedDimensions[1]) {
             throw new DataException(
-                    String.format("Size of dimension 1 of array must be %s, but was %s", expectedDimensions[1], array[0].length)
+                    String.format("Size of dimension 0 of array must be %s, but was %s", expectedDimensions[1], array[0].length)
             );
         }
     }
@@ -505,7 +506,7 @@ public class Tensor2d extends DfData {
     private static void verifyDimensions(double[] array, int[]expectedDimensions) {
         if (array.length != expectedDimensions[0]) {
             throw new DataException(
-                    String.format("Size of dimension 1 of array must be %s, but was %s", expectedDimensions[0], array.length)
+                    String.format("Size of dimension 0 of array must be %s, but was %s", expectedDimensions[0], array.length)
             );
         }
     }
@@ -531,13 +532,13 @@ public class Tensor2d extends DfData {
         boolean dim1F = false;
         boolean dim2F = false;
         for (int i = 0; i < shape.length; i++) {
-            if (dim1 == shape[i] && !dim1F) {
-                remappings[0] = i;
-                dim1F = true;
-            }
-            else if (dim2 == shape[i] && !dim2F) {
+            if (dim2 == shape[i] && !dim2F) {
                 remappings[1] = i;
                 dim2F = true;
+            }
+            else if (dim1 == shape[i] && !dim1F) {
+                remappings[0] = i;
+                dim1F = true;
             }
             else {
                 throw new DataException("For reshape the given dimensions must be " +

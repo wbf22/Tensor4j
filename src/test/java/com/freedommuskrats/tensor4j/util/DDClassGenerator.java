@@ -625,7 +625,7 @@ public class DDClassGenerator {
             fileString += "]) {\n" +
                     "            throw new DataException(\n" +
                     "                    String.format(\"";
-            fileString += "Size of dimension " + (dim - i) + " of array must be %s, but was %s\", expectedDimensions[";
+            fileString += "Size of dimension " + (dim - 1 - i) + " of array must be %s, but was %s\", expectedDimensions[";
             fileString += i;
             fileString += "], array";
             fileString += times(i, "[0]");
@@ -662,12 +662,9 @@ public class DDClassGenerator {
         }
 
         method += indent(2) + "for (int i = 0; i < shape.length; i++) {" + newLine(0);
-        method += indent(3) + "if (dim1 == shape[i] && !dim1F) {" + newLine(0);
-        method += indent(4) + "remappings[0] = i;" + newLine(0);
-        method += indent(4) + "dim1F = true;" + newLine(0);
-        method += indent(3) + "}" + newLine(0);
-        for(int i =2; i <= dim; i++) {
-            method += indent(3) + "else if (dim" + i + " == shape[i] && !dim" + i + "F) {" + newLine(0);
+        for(int i = dim; i > 0; i--) {
+            method += indent(3) + ((i==dim)? "" : "else ");
+            method += "if (dim" + i + " == shape[i] && !dim" + i + "F) {" + newLine(0);
             method += indent(4) + "remappings[" + (i-1) + "] = i;" + newLine(0);
             method += indent(4) + "dim" + i + "F = true;" + newLine(0);
             method += indent(3) + "}" + newLine(0);

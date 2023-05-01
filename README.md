@@ -513,6 +513,25 @@ a.append(b, 2);
 # Equivalents
 
 ## cat
+Cat is the same thing as append in Tensor4j. Here an example of perform a cat
+```java
+Tensor2d a = new Tensor2d(2, 2);
+Tensor2d b = new Tensor2d(1, 2);
+
+a.append(b, 0);
+```
+``` 
+[0.0, 0.6]
+[0.8, 0.6]
+
+[0.5]
+[0.9]
+
+
+[0.0, 0.6, 0.5]
+[0.8, 0.6, 0.9]
+```
+
 
 ## vstack
 
@@ -544,6 +563,42 @@ c.append(b);
 ```
 
 ## transpose
+Our reshape can be used to get the transpose of a tensor. Here are some examples
+```java
+Tensor2d a = new Tensor2d(2, 2);
+a.set(0, 0, 1);
+a.set(0, 1, 2);
+a.set(1, 0, 1);
+a.set(1, 1, 2);
+
+a.reshape(2, 2);
+```
+``` 
+[1.0, 1.0]
+[2.0, 2.0]
+
+[1.0, 2.0]
+[1.0, 2.0]
+```
+
+```java
+Tensor1d a = new Tensor1d(2);
+Tensor2d b = a.unsqueeze(1);
+b.append(a);
+b.append(a);
+b.append(a);
+
+b.reshape(4, 2);
+```
+``` 
+[0.9, 0.2]
+[0.9, 0.2]
+[0.9, 0.2]
+[0.9, 0.2]
+
+[0.9, 0.9, 0.9, 0.9]
+[0.2, 0.2, 0.2, 0.2]
+```
 
 
 

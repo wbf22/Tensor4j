@@ -424,17 +424,17 @@ public class Tensor3d extends DfData {
     private static void verifyDimensions(double[][][] array, int[]expectedDimensions) {
         if (array.length != expectedDimensions[0]) {
             throw new DataException(
-                    String.format("Size of dimension 3 of array must be %s, but was %s", expectedDimensions[0], array.length)
+                    String.format("Size of dimension 2 of array must be %s, but was %s", expectedDimensions[0], array.length)
             );
         }
         else if (array[0].length != expectedDimensions[1]) {
             throw new DataException(
-                    String.format("Size of dimension 2 of array must be %s, but was %s", expectedDimensions[1], array[0].length)
+                    String.format("Size of dimension 1 of array must be %s, but was %s", expectedDimensions[1], array[0].length)
             );
         }
         else if (array[0][0].length != expectedDimensions[2]) {
             throw new DataException(
-                    String.format("Size of dimension 1 of array must be %s, but was %s", expectedDimensions[2], array[0][0].length)
+                    String.format("Size of dimension 0 of array must be %s, but was %s", expectedDimensions[2], array[0][0].length)
             );
         }
     }
@@ -443,12 +443,12 @@ public class Tensor3d extends DfData {
     private static void verifyDimensions(double[][] array, int[]expectedDimensions) {
         if (array.length != expectedDimensions[0]) {
             throw new DataException(
-                    String.format("Size of dimension 2 of array must be %s, but was %s", expectedDimensions[0], array.length)
+                    String.format("Size of dimension 1 of array must be %s, but was %s", expectedDimensions[0], array.length)
             );
         }
         else if (array[0].length != expectedDimensions[1]) {
             throw new DataException(
-                    String.format("Size of dimension 1 of array must be %s, but was %s", expectedDimensions[1], array[0].length)
+                    String.format("Size of dimension 0 of array must be %s, but was %s", expectedDimensions[1], array[0].length)
             );
         }
     }
@@ -475,17 +475,17 @@ public class Tensor3d extends DfData {
         boolean dim2F = false;
         boolean dim3F = false;
         for (int i = 0; i < shape.length; i++) {
-            if (dim1 == shape[i] && !dim1F) {
-                remappings[0] = i;
-                dim1F = true;
+            if (dim3 == shape[i] && !dim3F) {
+                remappings[2] = i;
+                dim3F = true;
             }
             else if (dim2 == shape[i] && !dim2F) {
                 remappings[1] = i;
                 dim2F = true;
             }
-            else if (dim3 == shape[i] && !dim3F) {
-                remappings[2] = i;
-                dim3F = true;
+            else if (dim1 == shape[i] && !dim1F) {
+                remappings[0] = i;
+                dim1F = true;
             }
             else {
                 throw new DataException("For reshape the given dimensions must be " +
