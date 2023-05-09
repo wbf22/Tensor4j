@@ -32,10 +32,14 @@ If you're looking for a lightweight java library for doing multidimensional math
 # Getting Started
 Maven dependency:
 ```
-coming soon
+<dependency>
+  <groupId>org.tensor4j</groupId>
+  <artifactId>tensor4j</artifactId>
+  <version>1.0.0</version>
+</dependency>
 ```
 
-or in maven central https://mvnrepository.com/artifact/org.tensor4j/comingSoon
+or in github packages [https://mvnrepository.com/artifact/org.tensor4j/comingSoon](https://github.com/wbf22/Tensor4j/packages/1854331)
 
 
 
