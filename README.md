@@ -39,7 +39,7 @@ Maven dependency:
 </dependency>
 ```
 
-or in github packages [https://mvnrepository.com/artifact/org.tensor4j/comingSoon](https://github.com/wbf22/Tensor4j/packages/1854331)
+or in github packages [https://github.com/wbf22/Tensor4j/packages/1854331](https://github.com/wbf22/Tensor4j/packages/1854331)
 
 
 
